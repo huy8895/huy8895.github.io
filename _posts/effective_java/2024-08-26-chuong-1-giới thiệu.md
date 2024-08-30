@@ -1,7 +1,7 @@
 ---
 title: "Chương 1: Giới thiệu"
 description: "Giới thiệu tổng quan về mục tiêu, nội dung và cách tiếp cận của cuốn sách, đồng thời giải thích những khái niệm chính và cách cuốn sách tổ chức các thông tin."
-author: huytvdev
+author: huy8895
 date: 2024-08-26 11:05:00 +0800
 categories: [ Effective Java ]
 tags: [ java ]

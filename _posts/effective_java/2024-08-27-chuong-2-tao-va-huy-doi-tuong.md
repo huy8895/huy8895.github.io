@@ -1,7 +1,7 @@
 ---
 title: "Chương 2: Tạo và huỷ đối tượng"
 description: 
-author: "huytvdev"
+author: huy8895
 date: 2024-08-27 11:33:00 +0800
 categories: [Effective Java]
 tags: [java]

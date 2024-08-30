@@ -1,7 +1,7 @@
 ---
 title: "Tích hợp Reloading Properties trong spring cloud"
 description: "Cập nhật giá trị mới cho config mà không cần restart service"
-author: "huytvdev"
+author: huy8895
 date: 2024-05-24 16:15:00 +0800
 categories: [Spring Cloud]
 tags: [java, springcloud, springboot, refresh_config]
@@ -25,8 +25,8 @@ mermaid: true
 management.endpoints.web.exposure.include=refresh
 ```
 
-### 1.3 Thêm các giá trị vào file resources/bootstrap.yml 
-- thay giá trị `SERVICE_NAME` bằng giá trị `spring.application.name` trong file `application.yml`
+### 1.3 Thêm các giá trị vào file resources/bootstrap.yml
+thay giá trị `SERVICE_NAME` bằng giá trị `spring.application.name` trong file `application.yml`
 ```yaml
 spring:
   cloud:
