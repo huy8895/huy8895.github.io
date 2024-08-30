@@ -77,7 +77,3 @@ curl --location --request POST '<domain>/actuator/refresh' \
 {: .prompt-info }
 [baedung]: https://www.baeldung.com/spring-reloading-properties
 
-<span id="busuanzi_container_page_pv">
-  This post has been viewed <span id="busuanzi_value_page_pv"></span> times.
-</span>
-<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
