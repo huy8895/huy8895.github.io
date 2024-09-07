@@ -52,6 +52,7 @@ mermaid: true
 - Kiểm tra thời hạn của key
   ![Jetbra 6](assets/img/posts/20240907/6.png){: width="972" height="589" }
   _About Intellij_
+
 > Trên đây là cách mà mình active key của intellj Ultimate, ủng hộ các bạn mua key bản quyền của Jetbrain
 {: .prompt-info }
 
