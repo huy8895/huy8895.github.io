@@ -3,7 +3,7 @@ title: "Kích hoạt key Intellij Ultimate mới nhất"
 description: ""
 author: huy8895
 date: 2024-09-07 09:15:00 +0700
-categories: [Tool]
+categories: [Tool, Intellij]
 tags: [tips, Intellij]
 pin: true
 math: true
