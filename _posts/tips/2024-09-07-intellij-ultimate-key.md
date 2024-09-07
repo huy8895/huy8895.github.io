@@ -8,6 +8,8 @@ tags: [tips, Intellij]
 pin: true
 math: true
 mermaid: true
+image:
+  path: assets/img/posts/20240907/0.png
 ---
 
 > IntelliJ IDEA là một môi trường phát triển tích hợp (IDE) mạnh mẽ, tập trung chủ yếu vào việc phát triển Java, nhưng cũng hỗ trợ nhiều ngôn ngữ lập trình khác như Kotlin, Groovy, Scala và nhiều công nghệ web. Nó cung cấp các tính năng thông minh như tự động hoàn thành mã, phân tích mã, gỡ lỗi (debugging), tích hợp Git, Maven, Gradle, hỗ trợ cho phát triển ứng dụng web và di động. IntelliJ IDEA nổi bật nhờ giao diện thân thiện, khả năng tuỳ chỉnh cao và sự hỗ trợ mạnh mẽ từ JetBrains.
