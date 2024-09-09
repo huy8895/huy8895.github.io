@@ -42,19 +42,19 @@ với template tương ứng trong cài đặt.
 2. Trong hộp thoại Save File as Template, đặt tên mới, định dạng và chỉnh sửa nội dung nếu cần. Bạn
    có thể định sẵn tên tệp hoặc sử dụng các biến để tự động tạo tên. Ví dụ:
 
-   - **File name**: Nếu cần, bạn có thể chỉ định tên cho tệp được tạo từ template. Mặc định, IntelliJ
-     IDEA sẽ yêu cầu người dùng nhập tên khi tạo tệp. Bạn có thể cố định một tên cụ thể để bỏ qua
-     bước này, hoặc sử dụng các biến có sẵn để tạo tên tự động. Ví dụ, bạn có thể đặt tệp một thư mục
-     trên bằng cách sử dụng ../${NAME}.
+- **File name**: Nếu cần, bạn có thể chỉ định tên cho tệp được tạo từ template. Mặc định, IntelliJ
+  IDEA sẽ yêu cầu người dùng nhập tên khi tạo tệp. Bạn có thể cố định một tên cụ thể để bỏ qua
+  bước này, hoặc sử dụng các biến có sẵn để tạo tên tự động. Ví dụ, bạn có thể đặt tệp một thư mục
+  trên bằng cách sử dụng ../${NAME}.
 
-   - **Reformat according to style**: Nội dung tạo ra từ template sẽ được định dạng theo quy tắc code
-     style đã thiết lập cho loại tệp đó.
+- **Reformat according to style**: Nội dung tạo ra từ template sẽ được định dạng theo quy tắc code
+  style đã thiết lập cho loại tệp đó.
 
-   - **Enable Live Templates**: Chèn các live templates vào trong template tệp. Sử dụng cú pháp
-     escape
-     của [Velocity](https://velocity.apache.org/engine/devel/user-guide.html) để bao gồm các biến
-     live
-     template trong file template, ví dụ: #[[ $MY_VARIABLE$ $END$ ]]#.
+- **Enable Live Templates**: Chèn các live templates vào trong template tệp. Sử dụng cú pháp
+  escape
+  của [Velocity](https://velocity.apache.org/engine/devel/user-guide.html) để bao gồm các biến
+  live
+  template trong file template, ví dụ: #[[ $MY_VARIABLE$ $END$ ]]#.
 
 3. Chọn **Reformat according to style** để định dạng theo quy tắc code style của loại tệp đó.
 
@@ -62,7 +62,6 @@ với template tương ứng trong cài đặt.
    và đóng hộp thoại.
 
 
-- tạị màn hình **File and Code Templates** chọn thêm mới template **+**
 - Truy cập
   trang [velocity](https://velocity.apache.org/engine/devel/user-guide.html#Velocity_Template_Language_VTL:_An_Introduction)
   để tham khảo cú pháp
@@ -71,13 +70,65 @@ với template tương ứng trong cài đặt.
 _Màn hình thêm mới template_
 
 ## 2. Syntax
-File templates sử dụng ngôn ngữ Velocity Template Language (VTL), bao gồm các cấu trúc sau:
-  - Văn bản thuần được giữ nguyên.
-  - Các biến được thay thế bằng giá trị tương ứng, ví dụ: `${NAME}` chèn tên do người dùng cung cấp khi tạo tệp.
-  - Các chỉ thị khác nhau như `#parse`, `#set`, `#if`, và các chỉ thị khác.
 
+- Văn bản thuần được giữ nguyên.
+- Các biến được thay thế bằng giá trị tương ứng, ví dụ: `${NAME}` chèn tên do người dùng cung cấp
+  khi tạo tệp.
+- Các chỉ thị khác nhau như `#parse`, `#set`, `#if`, và các chỉ thị khác.
+
+## 3. Ví dụ
+
+### 3.1 Tạo mới file template để tạo 1 jekyll new post
+
+1. Mong muốn: 1 file sẽ có dạng: `YYYY-MM-DD-(file-name).md` và Nội dung file sẽ có dạng:
+
+  ```markdown
+---
+title: "Sử dụng file template trong Intellij để tạo nhanh file theo mẫu"
+description: "mô tả"
+author: huy8895
+date: 2024-09-07 09:15:00 +0700
+categories: [ Tool, Intellij ]
+tags: [ Tips, Intellij, 'File Template' ]
+pin: true
+math: true
+mermaid: true
+image:
+path: assets/img/posts/20240907/0.png
+---
+  ```
+
+2. Cách thực hiện:
+
+- Tạị màn hình **File and Code Templates** chọn thêm mới template **+**
+- **name**: `Jekyll post` tên của file template
+- **Extensions**: `md` extension của file muốn tạo.
+- **File name**:
+
+```text
+${YEAR}-${MONTH}-${DAY}-${NAME}.md
+```
+
+- Nội dung file template:
+
+```markdown
+---
+title: ""
+description: ""
+author: ${USER}
+date: ${YEAR}-${MONTH}-${DAY} ${HOUR}:${MINUTE}:00 +0700
+categories: []
+tags: []
+pin: true
+math: true
+mermaid: true
+image:
+  path: assets/img/posts/20240907/0.png
+---
+```
 
 > Trên đây là cách mà mình sử dụng file template trong Intellij để tắng hiệu quả cho công việc, rất
 > mong giúp ích được cho các bạn.
-> {: .prompt-info }
+
+Tham khảo thêm tại: [File Template](https://www.jetbrains.com/help/idea/using-file-and-code-templates.html)
 
