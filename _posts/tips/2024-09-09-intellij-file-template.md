@@ -70,6 +70,11 @@ với template tương ứng trong cài đặt.
 [//]: # (  ![Jetbra]&#40;assets/img/posts/20240907/1.png&#41;{: width="972" height="589" })
 _Màn hình thêm mới template_
 
+## 2. Syntax
+File templates sử dụng ngôn ngữ Velocity Template Language (VTL), bao gồm các cấu trúc sau:
+  - Văn bản thuần được giữ nguyên.
+  - Các biến được thay thế bằng giá trị tương ứng, ví dụ: `${NAME}` chèn tên do người dùng cung cấp khi tạo tệp.
+  - Các chỉ thị khác nhau như `#parse`, `#set`, `#if`, và các chỉ thị khác.
 
 
 > Trên đây là cách mà mình sử dụng file template trong Intellij để tắng hiệu quả cho công việc, rất
