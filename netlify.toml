@@ -1,6 +1,0 @@
-[build]
-  command = "bundle update --bundler && bundle install && JEKYLL_ENV=production bundle exec jekyll build"
-  publish = "_site"
-
-[context.production.environment]
-  RUBY_VERSION = "3.3.5"
