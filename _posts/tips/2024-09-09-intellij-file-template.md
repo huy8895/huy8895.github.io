@@ -54,7 +54,7 @@ với template tương ứng trong cài đặt.
   escape
   của [Velocity](https://velocity.apache.org/engine/devel/user-guide.html) để bao gồm các biến
   live
-  template trong file template, ví dụ: #[[ $MY_VARIABLE$ $END$ ]]#.
+  template trong file template, ví dụ: `#[[ $MY_VARIABLE$ $END$ ]]#`.
 
 3. Chọn **Reformat according to style** để định dạng theo quy tắc code style của loại tệp đó.
 
@@ -127,7 +127,7 @@ image:
 ---
 ```
 
-> Trên đây là cách mà mình sử dụng file template trong Intellij để tắng hiệu quả cho công việc, rất
+> Trên đây là cách mà mình sử dụng file template trong Intellij để tăng hiệu quả cho công việc, rất
 > mong giúp ích được cho các bạn.
 
 Tham khảo thêm tại: [File Template](https://www.jetbrains.com/help/idea/using-file-and-code-templates.html)
