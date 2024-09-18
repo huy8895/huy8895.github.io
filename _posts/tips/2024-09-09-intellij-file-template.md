@@ -127,8 +127,88 @@ image:
 ---
 ```
 
+### 3.2 Tạo template file log toàn bộ api trong service springboot
+- Tạị màn hình **File and Code Templates** chọn thêm mới template **+**
+- **name**: `API logger` tên của file template
+- **Extensions**: `java` extension của file muốn tạo.
+- **Nội dung file template**:
+```java
+#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
+#parse("File Header.java")
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
+@Configuration
+public class ApiLogger {
+
+    @Autowired
+    private RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+    @Bean
+    public CommandLineRunner logApiEndpoints() {
+
+        return args -> {
+            File file = new File("D:\\3.api\\api_endpoints_${PROJECT_NAME}.csv");
+
+            // Create parent directories if they do not exist
+            file.getParentFile().mkdirs();
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write("HTTP Method,URL Pattern,Class,Method");
+                writer.newLine();
+
+                Map<RequestMappingInfo, HandlerMethod> handlerMethods = requestMappingHandlerMapping.getHandlerMethods();
+                handlerMethods.forEach((requestMappingInfo, handlerMethod) -> {
+                    StringBuilder requestMethods = new StringBuilder();
+                    for (RequestMethod requestMethod : requestMappingInfo.getMethodsCondition()
+                        .getMethods()) {
+                        requestMethods.append(requestMethod).append(" ");
+                    }
+                    final String httpMethod = requestMethods.toString().trim();
+                              final String urlPattern = String.valueOf(
+              requestMappingInfo.getPathPatternsCondition() == null
+                  ? requestMappingInfo.getPatternsCondition()
+                  : requestMappingInfo.getPathPatternsCondition());
+                    final String className = (String) handlerMethod.getBean();
+                    final String methodName = handlerMethod.getMethod().getName();
+                    System.out.printf("API: %s %s -> %s%n",
+                        httpMethod,
+                        urlPattern,
+                        className + "." + methodName);
+                    try {
+                        writer.write(String.format("%s,%s,%s,%s",
+                            httpMethod,
+                            urlPattern,
+                            className,
+                            methodName));
+                        writer.newLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                });
+            }
+        };
+    }
+
+}
+```
+
+
 > Trên đây là cách mà mình sử dụng file template trong Intellij để tăng hiệu quả cho công việc, rất
 > mong giúp ích được cho các bạn.
 
 Tham khảo thêm tại: [File Template](https://www.jetbrains.com/help/idea/using-file-and-code-templates.html)
+
+
 
