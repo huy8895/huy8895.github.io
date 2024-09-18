@@ -132,10 +132,11 @@ image:
 - **name**: `API logger` tên của file template
 - **Extensions**: `java` extension của file muốn tạo.
 - **Nội dung file template**:
-```java
+
+```java 
+
 @Configuration
 public class ApiLogger {
-
     @Autowired
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
