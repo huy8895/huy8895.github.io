@@ -13,7 +13,7 @@ một hệ thống lập lịch công việc sử dụng Spring Boot và Quartz 
 ## 1.Giới thiệu
 
 Trong nhiều ứng dụng, việc lập lịch và thực thi các tác vụ tự động là một yêu cầu phổ
-biến. Đặc biệt trong kiến trúc microservice việc có 1 servcie chuyên phục vụ cho việc lập lịch là
+biến. Đặc biệt trong kiến trúc microservice việc có 1 service chuyên phục vụ cho việc lập lịch là
 cần thiết.
 Vì vậy hôm nay tôi sẽ chia sẻ đến các bạn cách sử dụng quartz và springboot để tạo ra 1 ứng dụng
 chuyên phục vụ việc lập lịch và quản lý bằng database và quản lý bằng api.
@@ -116,18 +116,21 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 ```
 
 ### 2.2 Database
->Khi Quartz được cấu hình để sử dụng với một cơ sở dữ liệu, nó tạo ra một số bảng để lưu trữ thông
-tin về các job, trigger và lịch trình. Dưới đây là danh sách các bảng chính mà Quartz sử dụng cùng
-với giải thích về từng bảng.
+
+> Khi Quartz được cấu hình để sử dụng với một cơ sở dữ liệu, nó tạo ra một số bảng để lưu trữ thông
+> tin về các job, trigger và lịch trình. Dưới đây là danh sách các bảng chính mà Quartz sử dụng cùng
+> với giải thích về từng bảng.
 
 Diagram:
 
-![quartz_diagram](assets/img/posts/20240922-quartz-schedule-with-springboot/QRTZ_BLOB_TRIGGERS.png){:width="972" height="589" }
+![quartz_diagram](assets/img/posts/20240922-quartz-schedule-with-springboot/QRTZ_BLOB_TRIGGERS.png){:
+width="972" height="589" }
 _Quart diagram_
 
 Bảng chính mà Quartz sử dụng cùng với giải thích về từng bảng.
 
 1. **QRTZ_JOB_DETAILS**
+
 - Mục đích: Lưu trữ thông tin chi tiết về các job được lên lịch.
 - Các cột quan trọng:
   - **SCHED_NAME**: Tên của scheduler.
@@ -135,51 +138,68 @@ Bảng chính mà Quartz sử dụng cùng với giải thích về từng bản
   - **JOB_CLASS_NAME**: Lớp Java thực thi job.
   - **IS_DURABLE**: Cho biết job có tồn tại nếu không có trigger nào liên kết hay không.
   - **JOB_DATA**: Chứa thông tin dữ liệu cần thiết cho job (nếu có).
+
 2. **QRTZ_TRIGGERS**
+
 - Mục đích: Lưu trữ thông tin chi tiết về các trigger (cách các job được kích hoạt).
 - Các cột quan trọng:
   - **SCHED_NAME**: Tên của scheduler.
   - **TRIGGER_NAME**, **TRIGGER_GROUP**: Tên và nhóm của trigger.
   - **JOB_NAME**, **JOB_GROUP**: Tên và nhóm của job mà trigger liên kết.
   - **TRIGGER_STATE**: Trạng thái của trigger (ví dụ: WAITING, PAUSED, ACQUIRED, BLOCKED).
-  - **START_TIME, END_TIME, NEXT_FIRE_TIME, PREV_FIRE_TIME**: Các thời điểm kích hoạt tiếp theo và lần cuối cùng job được kích hoạt.
+  - **START_TIME, END_TIME, NEXT_FIRE_TIME, PREV_FIRE_TIME**: Các thời điểm kích hoạt tiếp theo và
+    lần cuối cùng job được kích hoạt.
   - **TRIGGER_TYPE**: Loại trigger (ví dụ: SIMPLE, CRON).
   - **MISFIRE_INSTR**: Cách xử lý khi trigger bị lỡ (misfire).
+
 3. **QRTZ_SIMPLE_TRIGGERS**
+
 - Mục đích: Lưu trữ thông tin chi tiết về các trigger kiểu SimpleTrigger.
 - Các cột quan trọng:
   - **SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP**: Thông tin định danh trigger.
   - **REPEAT_COUNT**: Số lần lặp lại.
   - **REPEAT_INTERVAL**: Khoảng thời gian giữa các lần kích hoạt.
   - **TIMES_TRIGGERED**: Số lần trigger đã được kích hoạt.
-  > Lưu ý: Trigger kiểu SimpleTrigger được sử dụng để lên lịch các job lặp lại theo chu kỳ đơn giản (
-    như “mỗi 10 giây”).
+  > Lưu ý: Trigger kiểu SimpleTrigger được sử dụng để lên lịch các job lặp lại theo chu kỳ đơn
+  giản (
+  như “mỗi 10 giây”).
+
 4. **QRTZ_CRON_TRIGGERS**
+
 - Mục đích: Lưu trữ thông tin về các trigger kiểu CronTrigger.
 - Các cột quan trọng:
   - **SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP**: Thông tin định danh trigger.
   - **CRON_EXPRESSION**: Biểu thức cron xác định lịch trình của trigger.
   - **TIME_ZONE_ID**: Múi giờ mà biểu thức cron dựa vào.
   > Trigger kiểu CronTrigger được sử dụng để lên lịch job theo biểu thức cron phức tạp (ví dụ: “chạy
-    vào 9:00 AM mỗi ngày”).
+  vào 9:00 AM mỗi ngày”).
+
 5. **QRTZ_BLOB_TRIGGERS**
-- Mục đích: Lưu trữ các trigger có dữ liệu blob (khi bạn cần lưu trữ nhiều dữ liệu tùy chỉnh với trigger).
+
+- Mục đích: Lưu trữ các trigger có dữ liệu blob (khi bạn cần lưu trữ nhiều dữ liệu tùy chỉnh với
+  trigger).
 - Các cột quan trọng:
   - **SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP**: Thông tin định danh trigger.
   - **BLOB_DATA**: Dữ liệu kiểu blob, chứa dữ liệu lớn hoặc dữ liệu tùy chỉnh cho trigger.
+
 6. **QRTZ_CALENDARS**
+
 - Mục đích: Lưu trữ thông tin về các lịch (calendar) được định nghĩa trong Quartz.
 - Các cột quan trọng:
   - **SCHED_NAME, CALENDAR_NAME**: Tên của scheduler và lịch.
   - **CALENDAR**: Thông tin về lịch (thời gian mà job không được kích hoạt hoặc bị bỏ qua).
 
-     > Lịch (Calendar) trong Quartz được dùng để xác định các khoảng thời gian mà job không được phép
-     chạy (ví dụ: không chạy vào ngày lễ).
+    > Lịch (Calendar) trong Quartz được dùng để xác định các khoảng thời gian mà job không được phép
+    chạy (ví dụ: không chạy vào ngày lễ).
+
 7. **QRTZ_PAUSED_TRIGGER_GRPS**
+
 - Mục đích: Lưu trữ các nhóm trigger đã bị tạm dừng (paused).
 - Các cột quan trọng:
   - **SCHED_NAME, TRIGGER_GROUP**: Tên của scheduler và nhóm trigger bị tạm dừng.
+
 8. **QRTZ_FIRED_TRIGGERS**
+
 - Mục đích: Lưu trữ thông tin về các trigger đã được kích hoạt gần đây.
 - Các cột quan trọng:
   - **SCHED_NAME, ENTRY_ID**: Định danh cho mỗi lần trigger kích hoạt.
@@ -187,76 +207,93 @@ Bảng chính mà Quartz sử dụng cùng với giải thích về từng bản
   - **INSTANCE_NAME**: Tên của instance Quartz đang chạy trigger.
   - **FIRED_TIME, SCHED_TIME**: Thời điểm trigger được kích hoạt và được lên lịch.
   - **STATE**: Trạng thái của job liên quan đến trigger (ví dụ: ACQUIRED, EXECUTED).
+
 9. **QRTZ_SCHEDULER_STATE**
+
 - Mục đích: Lưu trữ trạng thái của các scheduler Quartz đang chạy trong hệ thống.
 - Các cột quan trọng:
   - **SCHED_NAME**: Tên của scheduler.
   - **INSTANCE_NAME**: Tên của instance Quartz.
   - **LAST_CHECKIN_TIME**: Thời gian lần cuối scheduler kiểm tra.
   - **CHECKIN_INTERVAL**: Khoảng thời gian giữa các lần kiểm tra.
+
 10. **QRTZ_LOCKS**
-- Mục đích: Lưu trữ các khóa (locks) để đảm bảo rằng chỉ một instance Quartz có thể thực thi job cụ thể tại một thời điểm (để tránh các job trùng lặp).
+
+- Mục đích: Lưu trữ các khóa (locks) để đảm bảo rằng chỉ một instance Quartz có thể thực thi job cụ
+  thể tại một thời điểm (để tránh các job trùng lặp).
 - Các cột quan trọng:
   - **SCHED_NAME, LOCK_NAME**: Tên của scheduler và tên của khóa.
+
 11. **QRTZ_SIMPROP_TRIGGERS**
-- Mục đích: Lưu trữ các trigger kiểu Simple Property Trigger (trigger dựa trên các thuộc tính đơn giản).
+
+- Mục đích: Lưu trữ các trigger kiểu Simple Property Trigger (trigger dựa trên các thuộc tính đơn
+  giản).
 - Các cột quan trọng:
   - **SCHED_NAME, TRIGGER_NAME, TRIGGER_GROUP**: Thông tin định danh trigger.
   - Các cột khác lưu trữ các thuộc tính đơn giản liên quan đến trigger.
 
 **Tóm tắt:**
 Quartz sử dụng các bảng này để lưu trữ thông tin về:
+
 ```text
 Job: Chi tiết về các công việc cần thực hiện.
 Trigger: Lịch trình và trạng thái của các job.
 Lịch: Các khoảng thời gian job không được kích hoạt.
 Trạng thái hệ thống: Trạng thái của các scheduler và trigger đã kích hoạt.
 ```
+
 Mỗi bảng có một vai trò quan trọng để đảm bảo rằng Quartz có thể theo dõi các công việc, quản lý
 lịch trình, và xử lý trạng thái một cách chính xác trong một môi trường lưu trữ bền vững (persistent
 store).
 
 ### 2.3 Coding
+
 Dưới đây là danh sách các interface chính của Quartz:
-1. `Job` là một interface được triển khai bởi các lớp chứa logic nghiệp vụ mà chúng ta muốn thực thi.
+
+1. `Job` là một interface được triển khai bởi các lớp chứa logic nghiệp vụ mà chúng ta muốn thực
+   thi.
 2. `JobDetails` định nghĩa các instance của Job và dữ liệu liên quan đến nó.
 3. `Trigger` mô tả lịch trình thực thi của job.
-4. `Scheduler` là interface chính của Quartz, cung cấp tất cả các thao tác quản lý và tìm kiếm cho job và trigger.`
+4. `Scheduler` là interface chính của Quartz, cung cấp tất cả các thao tác quản lý và tìm kiếm cho
+   job và trigger.`
 
 #### 2.3.1 Triển khai job
+
 Để lập lịch được chúng ta cần có class implement lại hàm `execute` của interface `org.quartz.Job`
 hàm này sẽ được gọi khi job của chúng ta tạo được chạy.
 
 ```java
+
 @Slf4j
 @Component
 public class SampleJob implements Job {
-    @Autowired
-    ObjectMapper objectMapper;
 
-    @Override
-    @SneakyThrows
-    public void execute(JobExecutionContext context) {
-        log.info("[START] =====> execute() called with: [{}]", context.getJobDetail());
-        // Lấy thông tin jobDetail từ context
-        JobDetail jobDetail = context.getJobDetail();
-        // Ghi thông tin jobDetail vào log
-        log.info("Thông tin JobDetail sau khi lấy từ context: {}", jobDetail);
-        // Lấy thông tin jobDataMap từ jobDetail
-        JobDataMap jobDataMap = jobDetail.getJobDataMap();
-        // Ghi thông tin jobDataMap vào log
-        log.info("[END] Thông tin jobDataMap: {}", objectMapper.writeValueAsString(jobDataMap));
-    }
+  @Autowired
+  ObjectMapper objectMapper;
+
+  @Override
+  @SneakyThrows
+  public void execute(JobExecutionContext context) {
+    log.info("[START] =====> execute() called with: [{}]", context.getJobDetail());
+    // Lấy thông tin jobDetail từ context
+    JobDetail jobDetail = context.getJobDetail();
+    // Ghi thông tin jobDetail vào log
+    log.info("Thông tin JobDetail sau khi lấy từ context: {}", jobDetail);
+    // Lấy thông tin jobDataMap từ jobDetail
+    JobDataMap jobDataMap = jobDetail.getJobDataMap();
+    // Ghi thông tin jobDataMap vào log
+    log.info("[END] Thông tin jobDataMap: {}", objectMapper.writeValueAsString(jobDataMap));
+  }
 }
 ```
 
-
-
 #### 2.3.2 Tạo mới job
+
 Để tạo mới 1 job ta cần chuẩn bị các thông tin và truyền vào request body
 `AddJobDTO`. Ta có logic để thêm mới 1 job tại `JobService`
 
 ```java
+
 @Transactional(rollbackFor = ObjectAlreadyExistsException.class)
 public void addNewJob(AddJobDTO addJobDTO) throws SchedulerException {
   logger.info("Đang thêm job mới: {}", addJobDTO);
@@ -302,20 +339,154 @@ curl --location 'localhost:8080/jobs/add' \
     }
 }'
 ```
+
 > Job này sẽ được thực hiện bởi class SampleJob với khoảng thời gian giữa các lần chạy là 10 giây.
 
 Class `SampleJob` khi được chạy sẽ in ra console các thông tin của job như:
+
 ```shell
 2024-09-22 13:07:20.036  INFO 73164 --- [eduler_Worker-8] c.e.d.config.SampleJob : [START] =====> execute() called with: [JobDetail 'group-1.job-1'
 2024-09-22 13:07:20.036  INFO 73164 --- [eduler_Worker-8] c.e.d.config.SampleJob : Thông tin JobDetail sau khi lấy từ context: JobDetail 'group-1.job-1':  
 2024-09-22 13:07:20.036  INFO 73164 --- [eduler_Worker-8] c.e.d.config.SampleJob : [END] Thông tin jobDataMap: {"data": "test"}
 ```
 
+#### 2.3.3 Tạo mới job chạy 1 lần
+
+Để tạo job chỉ chạy 1 lần:
+
+```java
+  // Tạo trigger sẽ chỉ chạy một lần sau delayInSeconds
+Trigger trigger = TriggerBuilder.newTrigger()
+  .withIdentity(addOneTimeJobDTO.getTriggerName(), addOneTimeJobDTO.getGroupName())
+  .startAt(addOneTimeJobDTO.getStartTimeAsDate()) // Sử dụng startTime từ DTO
+  .withSchedule(SimpleScheduleBuilder.simpleSchedule()
+    .withRepeatCount(0))
+  .build();
+```
+
+#### 2.3.4 Tạo mới job dạng cron
+
+Để tạm dừng 1 job:
+
+```java
+  Trigger trigger = TriggerBuilder.newTrigger()
+  .withIdentity(addCronJobDTO.getTriggerName(), addCronJobDTO.getGroupName())
+  .withSchedule(
+    CronScheduleBuilder.cronSchedule(addCronJobDTO.getCronExpression())) // Sử dụng biểu thức cron
+  .build();
+```
+
+#### 2.3.5 Tạo mới job dạng cron
+
+Để tiếp tục 1 job:
+
+```java
+  // Tiếp tục một job
+public void resumeJob(String jobName, String groupName) throws SchedulerException {
+  logger.info("Resuming job: jobName={}, groupName={}", jobName, groupName);
+  scheduler.resumeJob(JobKey.jobKey(jobName, groupName));
+}
+```
+
+#### 2.3.5 Cập nhật thông tin job
+
+- Có 2 thứ cần chú ý khi muốn cập nhật thông tin job
+  1. Thông tin job detail
+  2. Thông tin trigger
+
+```java
+
+@Transactional(rollbackFor = ObjectAlreadyExistsException.class)
+public void updateJob(JobUpdateDTO updateDTO) throws SchedulerException {
+  JobKey jobKey = new JobKey(updateDTO.getJobName(), updateDTO.getGroupName());
+  JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+
+  if (jobDetail == null) {
+    throw new IllegalArgumentException("Job not found");
+  }
+
+  // Cập nhật JobDataMap
+  if (updateDTO.getNewJobData() != null && !updateDTO.getNewJobData()
+    .isEmpty()) {
+    JobBuilder jobBuilder = jobDetail.getJobBuilder();
+
+    // Đảm bảo job là durable
+    jobBuilder = jobBuilder.storeDurably();
+
+    // Cập nhật JobDataMap
+    JobDataMap jobDataMap = new JobDataMap(jobDetail.getJobDataMap());
+    jobDataMap.putAll(updateDTO.getNewJobData());
+    jobBuilder = jobBuilder.usingJobData(jobDataMap);
+
+    // Tạo JobDetail mới và cập nhật nó
+    JobDetail updatedJobDetail = jobBuilder.build();
+    scheduler.addJob(updatedJobDetail, true);
+  }
+
+  // Cập nhật Trigger
+  if (updateDTO.getNewTriggerName() != null || updateDTO.getNewIntervalInSeconds() != null) {
+    List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
+    if (!triggers.isEmpty()) {
+      Trigger oldTrigger = triggers.get(0);
+      TriggerBuilder<Trigger> tb = TriggerBuilder.newTrigger();
+
+      if (updateDTO.getNewTriggerName() != null) {
+        tb.withIdentity(updateDTO.getNewTriggerName(), updateDTO.getGroupName());
+      } else {
+        tb.withIdentity(oldTrigger.getKey());
+      }
+
+      if (updateDTO.getNewIntervalInSeconds() != null) {
+        if (oldTrigger instanceof SimpleTrigger) {
+          tb.withSchedule(SimpleScheduleBuilder.simpleSchedule()
+            .withIntervalInSeconds(updateDTO.getNewIntervalInSeconds())
+            .repeatForever());
+        } else {
+          // Xử lý các loại trigger khác nếu cần
+        }
+      } else {
+        tb.withSchedule(oldTrigger.getScheduleBuilder());
+      }
+
+      scheduler.rescheduleJob(oldTrigger.getKey(), tb.build());
+    }
+  }
+}
+```
+
+#### 2.3.6 Xoá job
+
+- Khi cần xoá job:
+
+```java
+  // Xóa job
+@Transactional(rollbackFor = SchedulerException.class)
+public void deleteJob(String jobName, String groupName) throws SchedulerException {
+  logger.info("Deleting job: jobName={}, groupName={}", jobName, groupName);
+  scheduler.deleteJob(JobKey.jobKey(jobName, groupName));
+}
+```
+
+#### 2.3.7 Lấy danh sách các job đang chạy
+
+```java
+  public List<String> getAllJobs() throws SchedulerException {
+  logger.info("Getting all jobs");
+  List<String> jobList = new ArrayList<>();
+  for (String groupName : scheduler.getJobGroupNames()) {
+    for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+      jobList.add("Job name: " + jobKey.getName() + ", Group name: " + jobKey.getGroup());
+    }
+  }
+  return jobList;
+}
+```
+
 ## Kết luận
 
-Dự án này không chỉ giúp tôi học hỏi thêm về Spring Boot và Quartz Scheduler mà còn tạo ra một giải
-pháp thực tế cho việc lập lịch công việc trong các ứng dụng doanh nghiệp. Tôi hy vọng chia sẻ này sẽ
-hữu ích cho những ai đang tìm hiểu về lập lịch công việc trong Java.
+Tôi hy vọng chia sẻ này sẽ hữu ích cho những ai đang tìm hiểu về lập lịch công việc trong Java.
 
 Nếu bạn quan tâm đến dự án này hoặc có bất kỳ câu hỏi nào, đừng ngần ngại để lại bình luận bên dưới.
 Cảm ơn các bạn đã đọc!
+
+Thông tin source code: [github](https://github.com/huy8895/demo-springboot-quartz-schedule)
