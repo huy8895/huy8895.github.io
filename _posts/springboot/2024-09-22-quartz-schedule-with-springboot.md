@@ -217,6 +217,12 @@ lịch trình, và xử lý trạng thái một cách chính xác trong một m�
 store).
 
 ### 2.3 Coding
+Dưới đây là danh sách các interface chính của Quartz:
+1. `Job` là một interface được triển khai bởi các lớp chứa logic nghiệp vụ mà chúng ta muốn thực thi.
+2. `JobDetails` định nghĩa các instance của Job và dữ liệu liên quan đến nó.
+3. `Trigger` mô tả lịch trình thực thi của job.
+4. `Scheduler` là interface chính của Quartz, cung cấp tất cả các thao tác quản lý và tìm kiếm cho job và trigger.`
+
 #### 2.3.1 Triển khai job
 Để lập lịch được chúng ta cần có class implement lại hàm `execute` của interface `org.quartz.Job`
 hàm này sẽ được gọi khi job của chúng ta tạo được chạy.
@@ -246,7 +252,7 @@ public class SampleJob implements Job {
 
 
 
-#### 2.3.1 Tạo mới job
+#### 2.3.2 Tạo mới job
 Để tạo mới 1 job ta cần chuẩn bị các thông tin và truyền vào request body
 `AddJobDTO`. Ta có logic để thêm mới 1 job tại `JobService`
 
