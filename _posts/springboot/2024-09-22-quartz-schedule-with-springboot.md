@@ -5,8 +5,6 @@ author: huy8895
 date: 2024-09-22 09:51:00 +0700
 categories: [ springboot, quartz ]
 tags: [ springboot, quartz ]
-image:
-  path: assets/img/posts/20240922-quartz-schedule-with-springboot/0.png
 ---
 
 Xin chào các bạn! Hôm nay, tôi muốn chia sẻ với các bạn về một dự án thú vị mà tôi đang thực hiện -
@@ -207,7 +205,6 @@ Bảng chính mà Quartz sử dụng cùng với giải thích về từng bản
   - Các cột khác lưu trữ các thuộc tính đơn giản liên quan đến trigger.
 
 **Tóm tắt:**
-
 Quartz sử dụng các bảng này để lưu trữ thông tin về:
 ```text
 Job: Chi tiết về các công việc cần thực hiện.
@@ -215,11 +212,98 @@ Trigger: Lịch trình và trạng thái của các job.
 Lịch: Các khoảng thời gian job không được kích hoạt.
 Trạng thái hệ thống: Trạng thái của các scheduler và trigger đã kích hoạt.
 ```
-
-
 Mỗi bảng có một vai trò quan trọng để đảm bảo rằng Quartz có thể theo dõi các công việc, quản lý
 lịch trình, và xử lý trạng thái một cách chính xác trong một môi trường lưu trữ bền vững (persistent
 store).
+
+### 2.3 Coding
+#### 2.3.1 Triển khai job
+Để lập lịch được chúng ta cần có class implement lại hàm `execute` của interface `org.quartz.Job`
+hàm này sẽ được gọi khi job của chúng ta tạo được chạy.
+
+```java
+@Slf4j
+@Component
+public class SampleJob implements Job {
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Override
+    @SneakyThrows
+    public void execute(JobExecutionContext context) {
+        log.info("[START] =====> execute() called with: [{}]", context.getJobDetail());
+        // Lấy thông tin jobDetail từ context
+        JobDetail jobDetail = context.getJobDetail();
+        // Ghi thông tin jobDetail vào log
+        log.info("Thông tin JobDetail sau khi lấy từ context: {}", jobDetail);
+        // Lấy thông tin jobDataMap từ jobDetail
+        JobDataMap jobDataMap = jobDetail.getJobDataMap();
+        // Ghi thông tin jobDataMap vào log
+        log.info("[END] Thông tin jobDataMap: {}", objectMapper.writeValueAsString(jobDataMap));
+    }
+}
+```
+
+
+
+#### 2.3.1 Tạo mới job
+Để tạo mới 1 job ta cần chuẩn bị các thông tin và truyền vào request body
+`AddJobDTO`. Ta có logic để thêm mới 1 job tại `JobService`
+
+```java
+@Transactional(rollbackFor = ObjectAlreadyExistsException.class)
+public void addNewJob(AddJobDTO addJobDTO) throws SchedulerException {
+  logger.info("Đang thêm job mới: {}", addJobDTO);
+
+  Class<? extends Job> jobClass;
+  try {
+    jobClass = (Class<? extends Job>) Class.forName(addJobDTO.getJobClassName());
+  } catch (ClassNotFoundException e) {
+    throw new IllegalArgumentException("Không tìm thấy lớp job", e);
+  }
+
+  JobDetail jobDetail = JobBuilder.newJob(jobClass)
+    .withIdentity(addJobDTO.getJobName(), addJobDTO.getGroupName())
+    .withDescription(addJobDTO.getDescription())
+    .setJobData(addJobDTO.getJobDataMap())
+    .build();
+
+  Trigger trigger = TriggerBuilder.newTrigger()
+    .withIdentity(addJobDTO.getTriggerName(), addJobDTO.getGroupName())
+    .startNow()
+    .withSchedule(SimpleScheduleBuilder.simpleSchedule()
+      .withIntervalInSeconds(addJobDTO.getIntervalInSeconds())
+      .repeatForever())
+    .build();
+
+  scheduler.scheduleJob(jobDetail, trigger);
+}
+```
+
+- gọi thử api Tạo mới:
+
+```shell
+curl --location 'localhost:8080/jobs/add' \
+--header 'Content-Type: application/json' \
+--data '{
+    "jobName": "job-1,
+    "groupName": "group-1",
+    "triggerName": "trigger-1",
+    "intervalInSeconds": 10,
+    "jobClassName": "com.example.demospringbootquartzschedule.config.SampleJob",
+    "jobData": {
+        "data": "test"
+    }
+}'
+```
+> Job này sẽ được thực hiện bởi class SampleJob với khoảng thời gian giữa các lần chạy là 10 giây.
+
+Class `SampleJob` khi được chạy sẽ in ra console các thông tin của job như:
+```shell
+2024-09-22 13:07:20.036  INFO 73164 --- [eduler_Worker-8] c.e.d.config.SampleJob : [START] =====> execute() called with: [JobDetail 'group-1.job-1'
+2024-09-22 13:07:20.036  INFO 73164 --- [eduler_Worker-8] c.e.d.config.SampleJob : Thông tin JobDetail sau khi lấy từ context: JobDetail 'group-1.job-1':  
+2024-09-22 13:07:20.036  INFO 73164 --- [eduler_Worker-8] c.e.d.config.SampleJob : [END] Thông tin jobDataMap: {"data": "test"}
+```
 
 ## Kết luận
 
