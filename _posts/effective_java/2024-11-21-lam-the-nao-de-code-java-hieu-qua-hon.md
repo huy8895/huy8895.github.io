@@ -18,22 +18,29 @@ mermaid: true
 # 2. Tạo và hủy đối tượng
 - chương này nói về cách tạo và hủy đối tượng để code hiệu quả hơn.
 
-## 2.1. Cân nhắc sử dụng phương thức static factory thay vì các hàm khởi tạo.
+## 1. Cân nhắc sử dụng phương thức static factory thay vì các hàm khởi tạo.
 
-## 2.2. Cân nhắc sử dụng Builder khi gặp constructor nhiều tham số.
+## 2. Cân nhắc sử dụng Builder khi gặp constructor nhiều tham số.
 
-## 2.3. Thực thi thuộc tính singleton bằng cách sử dụng private constructor hoặc enum.
+## 3. Thực thi thuộc tính singleton bằng cách sử dụng private constructor hoặc enum.
 
-## 2.4. Thực thi không thể khởi tạo bằng cách sử dụng hàm khởi tạo riêng tư.
+## 4. Thực thi không thể khởi tạo bằng cách sử dụng hàm khởi tạo riêng tư.
 
-## 2.5. Ưu tiên sử dụng dependency injection thay vì gắn chặt tài nguyên một cách cố định.
+## 5. Ưu tiên sử dụng dependency injection thay vì gắn chặt tài nguyên một cách cố định.
 
-## 2.6. Tránh tạo các đối tượng không cần thiết.
+## 6. Tránh tạo các đối tượng không cần thiết.
 
-## 2.7. Loại bỏ các tham chiếu đối tượng không còn sử dụng.
+## 7. Loại bỏ các tham chiếu đối tượng không còn sử dụng.
 
-## 2.8. Tránh sử dụng finalizers và cleaners.
+## 8. Tránh sử dụng finalizers và cleaners.
 
-## 2.9. Ưu tiên sử dụng try-with-resources thay vì try-finally.
+## 9. Ưu tiên sử dụng try-with-resources thay vì try-finally.
+
+# 3. Các phương thức chung cho tất cả các đối tượng.
+
+## 10. Tuân thủ quy ước chung khi ghi đè phương thức equals.
+
+## 11. 
+
 
 
