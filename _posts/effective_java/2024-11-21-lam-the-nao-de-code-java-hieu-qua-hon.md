@@ -40,7 +40,22 @@ mermaid: true
 
 ## 10. Tuân thủ quy ước chung khi ghi đè phương thức equals.
 
-## 11. 
+## 11. Luôn ghi đè phương thức hashCode khi bạn ghi đè phương thức equals.
 
+## 12. Luôn ghi đè phương thức toString.
+
+## 13. Ghi đè phương thức clone một cách cẩn thận.
+
+## 14. Cân nhắc việc triển khai interface Comparable.
+
+# 4. Classes và Interfaces
+
+## 15. Giảm thiểu mức độ truy cập của các lớp và thành viên.
+
+## 16. Trong các lớp public, sử dụng các phương thức truy cập thay vì các trường public.
+
+## 17. Giảm thiểu khả năng thay đổi (tính biến đổi).
+
+## 18. Ưu tiên sử dụng thành phần (composition) hơn kế thừa (inheritance).
 
 
