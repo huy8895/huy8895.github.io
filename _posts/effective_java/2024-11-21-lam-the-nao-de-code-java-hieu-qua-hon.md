@@ -58,4 +58,12 @@ mermaid: true
 
 ## 18. Ưu tiên sử dụng thành phần (composition) hơn kế thừa (inheritance).
 
+## 19. Hãy thiết kế và viết tài liệu rõ ràng cho việc kế thừa, hoặc nếu không thì ngăn cấm việc kế thừa.
+
+## 20. Nên ưu tiên sử dụng interface hơn là abstract class.
+
+## 21. Hãy thiết kế các interface để sử dụng lâu dài.
+
+
+
 
