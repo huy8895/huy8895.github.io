@@ -64,6 +64,7 @@ mermaid: true
 
 ## 21. Hãy thiết kế các interface để sử dụng lâu dài.
 
+## 22. Chỉ sử dụng interface để định nghĩa kiểu.
 
 
 
