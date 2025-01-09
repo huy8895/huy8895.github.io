@@ -66,5 +66,5 @@ mermaid: true
 
 ## 22. Chỉ sử dụng interface để định nghĩa kiểu.
 
-
+## 23. 
 
