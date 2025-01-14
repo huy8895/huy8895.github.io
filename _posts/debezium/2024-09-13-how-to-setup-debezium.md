@@ -38,15 +38,14 @@ Debezium nên được sử dụng khi cần theo dõi và xử lý các thay đ
 
 ### 1.6. Debezium hoạt động như thế nào?
 
-Debezium cài đặt một connector vào cơ sở dữ liệu để theo dõi các log bin (binary log) hoặc nguồn sự kiện của cơ sở dữ liệu. Khi phát hiện có thay đổi, các sự kiện sẽ được xuất ra và chuyển vào hệ thống xử lý như Apache Kafka. Từ đó, dữ liệu có thể được tiêu thụ và xử lý theo nhu cầu.
+
 
 > **Kết luận:**  
 > Debezium là một giải pháp mạnh mẽ cho việc xử lý dữ liệu thời gian thực, giúp giảm độ phức tạp và tăng hiệu quả trong quản lý dữ liệu.
 
 ## 2. Cách triển khai Debezium
 
-
-### 2.1 DockerFile
+### 2.1 Chuẩn bị DockerFile
 > Chuẩn bị DockerFile dựa trên image gốc và tải các driver cần thiết phục vụ cho việc kết nối.
 
 ```dockerfile
@@ -162,3 +161,22 @@ Expose các cổng 8083 (Kafka Connect REST API) và 5005 để gỡ lỗi.
 Kết nối với service Debezium Connect thông qua KAFKA_CONNECT_URIS để lấy dữ liệu và trạng thái. Expose trên cổng 8080 để truy cập giao diện web Debezium UI.
 
 
+## 3. Tạo source connector
+> Debezium cài đặt một connector vào cơ sở dữ liệu để theo dõi các log bin (binary log) hoặc nguồn sự kiện của cơ sở dữ liệu. Khi phát hiện có thay đổi, các sự kiện sẽ được xuất ra và chuyển vào hệ thống xử lý như Apache Kafka. Từ đó, dữ liệu có thể được tiêu thụ và xử lý theo nhu cầu.
+
+### 3.1 MYSQL source connector
+
+Để tạo được source connector cần có:
+1. Tạo người dùng cho source connector:
+
+```sql
+CREATE USER 'bpm_debezium_source'@'%' IDENTIFIED BY 'Bpm@2025';
+CREATE USER 'bpm_cdc_db_sink'@'%' IDENTIFIED BY 'Bpm@2025';
+```
+
+2. Cấp các quyền cần thiết
+
+```sql
+GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'bpm_debezium_source';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON bpm_cdc_db_sink.* TO 'bpm_cdc_db_sink'@'%';
+```
