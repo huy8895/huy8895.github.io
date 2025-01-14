@@ -144,23 +144,21 @@ services:
 docker-compose up -d
 ```
 
-- ở đây ta có các container :
+ở đây ta có các container :
+
 1. Kafka: Chạy Kafka phiên bản 3.5.1. Sử dụng cổng 9094 để kết nối với bên ngoài.
 Tích hợp các vai trò controller và broker trên cùng một node.
 
 2. Kafka UI: Cung cấp giao diện người dùng cho Kafka, giúp theo dõi và quản lý các topic, consumer group, và message của Kafka.
-
 Expose trên cổng 8895 để truy cập giao diện web.
-3. MySQL: Sử dụng image MySQL có sẵn từ Debezium để thử nghiệm.
 
+3. MySQL: Sử dụng image MySQL có sẵn từ Debezium để thử nghiệm.
 Được cấu hình với các biến môi trường cho tài khoản root và user bình thường.
 Debezium Connect: Đây là service Debezium, nơi các connector được triển khai để theo dõi các thay đổi trong cơ sở dữ liệu.
-
 Kết nối với Kafka qua BOOTSTRAP_SERVERS.
 Expose các cổng 8083 (Kafka Connect REST API) và 5005 để gỡ lỗi.
 
 4. Debezium UI: Giao diện người dùng Debezium giúp bạn quản lý các connector và theo dõi trạng thái của chúng.
+Kết nối với service Debezium Connect thông qua KAFKA_CONNECT_URIS để lấy dữ liệu và trạng thái. Expose trên cổng 8080 để truy cập giao diện web Debezium UI.
 
-Kết nối với service Debezium Connect thông qua KAFKA_CONNECT_URIS để lấy dữ liệu và trạng thái.
-Expose trên cổng 8080 để truy cập giao diện web Debezium UI.
 
