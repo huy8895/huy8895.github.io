@@ -672,8 +672,87 @@ int last = list.getLast();   // 5
 
 ## Java 22 (2024)
 
-- **Generational ZGC**: Cải thiện hiệu suất thu gom rác nhờ việc tối ưu hóa theo thế hệ.
-- **Pattern Matching Enhancements**: Mở rộng khả năng của pattern matching cho các kiểu dữ liệu phức tạp và tùy biến.
+> **Java 22** mang đến các cải tiến tập trung vào hiệu năng, bảo mật và trải nghiệm developer
+{: .prompt-important }
+
+- **Scoped Values (Incubator)**: Quản lý dữ liệu an toàn giữa các luồng
+```java
+final ScopedValue<String> CURRENT_USER = ScopedValue.newInstance();
+
+void processRequest() {
+    ScopedValue.where(CURRENT_USER, "Nguyễn Văn A")
+               .run(() -> {
+                   System.out.println("User: " + CURRENT_USER.get());
+                   // Xử lý logic nghiệp vụ
+               });
+}
+```
+
+- **Stream Gatherers (Preview)**: Thêm bộ thu thập tùy biến cho Stream
+```java
+List<String> filtered = Stream.of("a", "b", null, "c")
+    .gather(Gatherers.filter(Objects::nonNull))
+    .toList(); // [a, b, c]
+```
+
+- **Structured Concurrency (Incubator)**: Quản lý tác vụ đồng thời
+```java
+try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Future<String> user = scope.fork(this::fetchUser);
+    Future<String> order = scope.fork(this::fetchOrder);
+    
+    scope.join();
+    System.out.println(user.resultNow() + " - " + order.resultNow());
+}
+```
+
+- **Statements Before Super**: Khởi tạo trước khi gọi constructor cha
+```java
+public class Circle extends Shape {
+    private final double radius;
+    
+    public Circle(double radius) {
+        this.radius = radius; // Khởi tạo trước super()
+        super("Circle");
+    }
+}
+```
+
+- **Class-File API (Preview)**: Thao tác với file .class
+```java
+ClassFile cf = ClassFile.of();
+ClassModel model = cf.parse(Paths.get("MyClass.class"));
+model.methods().forEach(m -> System.out.println(m.methodName()));
+```
+
+- **Region Pinning cho G1 GC**: Tối ưu thu gom rác
+```bash
+# Kích hoạt tính năng
+java -XX:+UseG1GC -XX:+G1RegionPinning MyApp
+```
+
+- **String Templates (Second Preview)**: Chuỗi template nâng cao
+```java
+String name = "Huy";
+int age = 25;
+String info = STR."Tên: \{name}, Tuổi: \{age}";
+```
+
+- **Unnamed Variables & Patterns**: Bỏ qua biến không dùng
+```java
+// Bỏ qua exception trong try-with-resources
+try (var _ = new FileInputStream("data.txt")) {
+    // Xử lý file
+}
+
+// Pattern matching không cần tên biến
+if (obj instanceof Point(int x, _)) {
+    System.out.println("x = " + x);
+}
+```
+
+> Các tính năng incubator/preview cần kích hoạt bằng flag `--enable-preview --add-modules jdk.incubator.concurrent`
+{: .prompt-warning }
 
 ## Java 23 (Dự kiến 2026)
 
