@@ -1,7 +1,7 @@
 ---
 title: "Những thay đổi từ Java 8 đến Java 23: Từ Lý Thuyết đến Thực Hành"
 description: ""
-author: huytv
+author: huy8895
 date: 2025-02-09 09:22:00 +0700
 categories: [Java,Programming]
 tags: [Java, "Java 8"]
@@ -22,6 +22,9 @@ Trong bài viết này, chúng ta sẽ cùng tổng hợp những cải tiến v
 - **Tính ổn định và phổ biến**: Java 8 là một trong những phiên bản được sử dụng rộng rãi.
 - **Lambda Expressions** và **Stream API**: Mở ra kỷ nguyên lập trình hàm trong Java.
 - **Optional**: Giúp xử lý giá trị null một cách an toàn.
+- **Default Methods trong Interface**: Cho phép thêm phương thức mới vào interface mà không làm vỡ các lớp cũ
+- **Date/Time API mới (java.time)**: Thay thế Date/Calendar cũ bằng API xử lý ngày giờ hiện đại và an toàn hơn
+- **CompletableFuture**: Cải tiến lập trình bất đồng bộ với API Future mạnh mẽ hơn
 
 ## Java 9 (2017)
 
@@ -130,6 +133,31 @@ public class Main {
     public record Person(String name, int age) {}
 }
 ```
+
+Thêm ví dụ về CompletableFuture:
+
+```java
+public class ConcurrencyDemo {
+    public static void main(String[] args) throws Exception {
+        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
+            // Giả lập tác vụ tốn thời gian
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "Kết quả xử lý";
+        }).thenApply(result -> {
+            System.out.println("Xử lý tiếp: " + result.toUpperCase());
+            return null;
+        });
+        
+        future.get(); // Đợi hoàn thành
+        System.out.println("Hoàn thành tất cả tác vụ");
+    }
+}
+```
+
 ## Kết luận
 Qua hành trình phát triển từ Java 8 đến Java 23, chúng ta thấy rằng ngôn ngữ Java không ngừng cải tiến để đáp ứng nhu cầu của lập trình viên và xu hướng công nghệ hiện đại. Các tính năng mới như var, records, pattern matching, virtual threads, và các cải tiến về bộ thu gom rác, mô-đun hóa cũng như bảo mật đã làm cho Java trở nên linh hoạt và mạnh mẽ hơn rất nhiều.
 
