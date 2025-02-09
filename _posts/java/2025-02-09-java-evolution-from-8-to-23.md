@@ -295,8 +295,41 @@ java -XX:SharedArchiveFile=app.jsa -jar myapp.jar
 ## Java 14 (2020)
 
 - **Records (Preview)**: Cung cấp cú pháp ngắn gọn để định nghĩa các lớp chỉ chứa dữ liệu.
+
+```java
+// Định nghĩa record cho thông tin người dùng
+public record User(
+    String username,
+    String email,
+    LocalDate registeredDate
+) {}
+
+// Sử dụng record
+User newUser = new User("huy8895", "huy@example.com", LocalDate.now());
+System.out.println(newUser.username()); // huy8895
+```
+
 - **Pattern Matching cho `instanceof` (Preview)**: Cải thiện cú pháp kiểm tra kiểu đối tượng.
-- **Switch Expressions** được chuyển từ Preview sang tính năng chính thức.
+
+```java
+// Kiểm tra và ép kiểu trong 1 biểu thức
+Object obj = "Hello Java 14";
+if (obj instanceof String s && s.length() > 5) {
+    System.out.println("Độ dài chuỗi: " + s.length());
+}
+
+// Sử dụng với switch expression
+String formatted = switch (obj) {
+    case Integer i -> String.format("Số nguyên: %d", i);
+    case Double d -> String.format("Số thực: %.2f", d);
+    case String s -> String.format("Chuỗi: %s", s);
+    default -> "Kiểu không xác định";
+};
+```
+
+> Cần kích hoạt preview features khi compile:
+> `javac --enable-preview --release 14 Main.java`
+{: .prompt-info }
 
 ## Java 15 (2020)
 
