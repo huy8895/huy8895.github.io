@@ -88,8 +88,8 @@ CompletableFuture.supplyAsync(() -> fetchDataFromAPI())
 ## Java 9 (2017)
 
 > Project Jigsaw (module system) có thể gây breaking change với các thư viện cũ
-{: .prompt-note }
-
+{: .prompt-warning }
+    
 - **Module System (Project Jigsaw)**: Giúp chia nhỏ ứng dụng thành các mô-đun độc lập, dễ quản lý và bảo trì.
 ```java
 // module-info.java
@@ -109,6 +109,7 @@ Tổng: 30
 ```
 
 - **Cải tiến API Stream** và **Factory Methods cho Collections**: Đơn giản hóa việc khởi tạo danh sách, tập hợp và bản đồ.
+
 ```java
 // Tạo List bất biến
 List<String> colors = List.of("Đỏ", "Xanh", "Vàng");
