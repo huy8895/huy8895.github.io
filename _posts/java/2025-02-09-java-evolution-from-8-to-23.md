@@ -189,6 +189,7 @@ java -XX:+UseG1GC -Xmx4g -XX:MaxGCPauseMillis=200 MyApp
 
 - Phiên bản **LTS (Long-Term Support)**: Đảm bảo hỗ trợ và ổn định lâu dài.
 - **HTTP Client API**: Hỗ trợ giao tiếp với HTTP/2 và WebSocket.
+
 ```java
 HttpClient client = HttpClient.newHttpClient();
 HttpRequest request = HttpRequest.newBuilder()
@@ -202,11 +203,13 @@ client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
 ```
 
 - Khả năng chạy trực tiếp file `.java` mà không cần biên dịch trước:
+
 ```bash
 java Main.java
 ```
 
 - Cải tiến các tiện ích của **String API**:
+
 ```java
 String text = "  Java 11  ";
 System.out.println(text.strip());          // "Java 11"
