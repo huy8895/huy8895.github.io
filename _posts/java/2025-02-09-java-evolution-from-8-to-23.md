@@ -476,14 +476,78 @@ String formatValue(Object value) {
 
 ## Java 18 (2022)
 
-- **UTF-8** trở thành bộ ký tự mặc định cho JVM.
+- **UTF-8 mặc định**:
+
+```java
+// Ghi file với encoding mặc định UTF-8
+Path filePath = Path.of("test.txt");
+Files.writeString(filePath, "Tiếng Việt có dấu: Đẹp quá!");
+
+// Đọc file không cần chỉ định encoding
+String content = Files.readString(filePath);
+System.out.println(content); 
+```
+
 - **Simple Web Server (Incubator)**: Cung cấp một máy chủ web đơn giản phục vụ cho việc phát triển và thử nghiệm.
+  
+```java
+// Khởi động web server đơn giản
+var server = SimpleFileServer.createFileServer(
+    new InetSocketAddress(8080), 
+    Path.of("."), 
+    SimpleFileServer.OutputLevel.VERBOSE
+);
+server.start();
+
+// Truy cập http://localhost:8080 để xem nội dung thư mục
+```
+
+- **Code Snippets trong JavaDoc**:
+
+```java
+/**
+ * Tính tổng hai số
+ * {@snippet :
+ * int a = 5;
+ * int b = 10;
+ * int sum = a + b;  // Kết quả là 15
+ * }
+ */
+public int add(int a, int b) {
+    return a + b;
+}
+```
+
+> Web Server chỉ dành cho mục đích phát triển và demo
+{: .prompt-warning }
 
 ## Java 19 (2022)
 
 - **Virtual Threads (Preview)**: Cho phép tạo hàng triệu luồng ảo, giúp xử lý đa luồng hiệu quả hơn.
+
+```java
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    IntStream.range(0, 10_000).forEach(i -> {
+        executor.submit(() -> {
+            Thread.sleep(Duration.ofSeconds(1));
+            System.out.println("Xử lý task " + i);
+            return i;
+        });
+    });
+}
+```
+
 - **Structured Concurrency (Incubator)**: Cải tiến cách quản lý các tác vụ bất đồng bộ.
-- **Foreign Function & Memory API** được cải tiến thêm qua phiên bản incubator thứ hai.
+
+```java
+try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Future<String> userFuture = scope.fork(() -> fetchUser());
+    Future<String> orderFuture = scope.fork(() -> fetchOrders());
+    
+    scope.join();
+    System.out.println("Kết quả: " + userFuture.get() + " - " + orderFuture.get());
+}
+```
 
 ## Java 20 (2023)
 
