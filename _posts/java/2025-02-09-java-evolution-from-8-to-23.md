@@ -189,8 +189,30 @@ java -XX:+UseG1GC -Xmx4g -XX:MaxGCPauseMillis=200 MyApp
 
 - Phiên bản **LTS (Long-Term Support)**: Đảm bảo hỗ trợ và ổn định lâu dài.
 - **HTTP Client API**: Hỗ trợ giao tiếp với HTTP/2 và WebSocket.
-- Khả năng chạy trực tiếp file `.java` mà không cần biên dịch trước.
-- Cải tiến các tiện ích của **String API**.
+```java
+HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+        .uri(URI.create("https://api.example.com/data"))
+        .build();
+
+client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        .thenApply(HttpResponse::body)
+        .thenAccept(System.out::println)
+        .join();
+```
+
+- Khả năng chạy trực tiếp file `.java` mà không cần biên dịch trước:
+```bash
+java Main.java
+```
+
+- Cải tiến các tiện ích của **String API**:
+```java
+String text = "  Java 11  ";
+System.out.println(text.strip());          // "Java 11"
+System.out.println(text.repeat(3));        // "  Java 11   Java 11   Java 11  "
+System.out.println(" ".isBlank());         // true
+```
 
 ## Java 12 (2019)
 
