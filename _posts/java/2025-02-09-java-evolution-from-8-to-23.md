@@ -85,6 +85,84 @@ CompletableFuture.supplyAsync(() -> fetchDataFromAPI())
 - **Module System (Project Jigsaw)**: Giúp chia nhỏ ứng dụng thành các mô-đun độc lập, dễ quản lý và bảo trì.
 - **JShell (REPL)**: Công cụ tương tác dòng lệnh để thử nghiệm các đoạn mã Java.
 - **Cải tiến API Stream** và **Factory Methods cho Collections**: Đơn giản hóa việc khởi tạo danh sách, tập hợp và bản đồ.
+- **Process API**: Quản lý các tiến trình hệ thống hiệu quả hơn.
+- **Reactive Streams**: Hỗ trợ lập trình reactive với Flow API.
+- **Try-With-Resources cải tiến**: Cho phép sử dụng biến final trong khối try-with-resources.
+- **Private Methods trong Interface**: Thêm phương thức private cho interface.
+
+**Module System - Tạo ứng dụng module hóa**
+```java
+// module-info.java
+module com.example.myapp {
+    requires java.base;
+    exports com.example.myapp.api;
+}
+```
+
+**JShell - Công cụ REPL tương tác**
+```java
+jshell> List<String> colors = List.of("Red", "Green", "Blue")
+colors ==> [Red, Green, Blue]
+jshell> colors.stream().filter(c -> c.startsWith("B")).forEach(System.out::println)
+Blue
+```
+
+**Factory Methods cho Collections - Khởi tạo collection ngắn gọn**
+```java
+List<String> immutableList = List.of("Java", "Python", "C++");
+Set<Integer> immutableSet = Set.of(1, 2, 3);
+Map<String, Integer> immutableMap = Map.ofEntries(
+    Map.entry("Alice", 25),
+    Map.entry("Bob", 30)
+);
+```
+
+**Process API - Quản lý tiến trình hệ thống**
+```java
+ProcessHandle currentProcess = ProcessHandle.current();
+System.out.println("PID: " + currentProcess.pid());
+System.out.println("Thời gian chạy: " + currentProcess.info().totalCpuDuration().orElse(null));
+```
+
+**Reactive Streams - Xử lý luồng dữ liệu bất đồng bộ**
+```java
+SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+publisher.subscribe(new Subscriber<>() {
+    public void onSubscribe(Subscription subscription) {
+        subscription.request(1);
+    }
+    public void onNext(String item) {
+        System.out.println("Nhận dữ liệu: " + item);
+    }
+    // ... các phương thức khác
+});
+publisher.submit("Dữ liệu mẫu");
+```
+
+**Try-With-Resources cải tiến**
+```java
+BufferedReader reader = new BufferedReader(new FileReader("data.txt"));
+try (reader) { // Sử dụng biến đã khai báo
+    String line = reader.readLine();
+    while (line != null) {
+        System.out.println(line);
+        line = reader.readLine();
+    }
+}
+```
+
+**Private Methods trong Interface**
+```java
+interface Logger {
+    default void logInfo(String message) {
+        log(message, "INFO");
+    }
+    
+    private void log(String message, String level) {
+        System.out.println("[" + level + "] " + LocalDateTime.now() + ": " + message);
+    }
+}
+```
 
 ## Java 10 (2018)
 
