@@ -5,7 +5,7 @@ author: huy8895
 date: 2025-01-09 21:35:00 +0800
 categories: [Keycloak, Docker]
 tags: [keycloak, Docker]
-pin: true
+pin: false
 math: false
 mermaid: false
 ---

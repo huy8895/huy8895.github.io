@@ -5,7 +5,7 @@ author: huy8895
 date: 2024-09-07 09:15:00 +0700
 categories: [ Tool, Intellij ]
 tags: [ Tips, Intellij, 'File Template' ]
-pin: true
+pin: false
 math: true
 mermaid: true
 image:
@@ -90,7 +90,7 @@ author: huy8895
 date: 2024-09-07 09:15:00 +0700
 categories: [ Tool, Intellij ]
 tags: [ Tips, Intellij, 'File Template' ]
-pin: true
+pin: false
 math: true
 mermaid: true
 image:
@@ -119,7 +119,7 @@ author: ${USER}
 date: ${YEAR}-${MONTH}-${DAY} ${HOUR}:${MINUTE}:00 +0700
 categories: []
 tags: []
-pin: true
+pin: false
 math: true
 mermaid: true
 image:

@@ -5,7 +5,7 @@ author: huy8895
 date: 2024-09-13 23:15:00 +0700
 categories: [Debezium]
 tags: [debezium, CDC, kafka]
-pin: true
+pin: false
 mermaid: true
 image:
   path: assets/img/posts/20240913/0.png

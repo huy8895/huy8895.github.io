@@ -5,7 +5,7 @@ author: huy8895
 date: 2024-08-27 11:33:00 +0800
 categories: [Effective Java]
 tags: [java]
-pin: true
+pin: false
 math: true
 mermaid: true
 #image:

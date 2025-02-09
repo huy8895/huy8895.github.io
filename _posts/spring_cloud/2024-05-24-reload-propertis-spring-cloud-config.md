@@ -5,7 +5,7 @@ author: huy8895
 date: 2024-05-24 16:15:00 +0800
 categories: [Spring Cloud]
 tags: [java, springcloud, springboot, refresh_config]
-pin: true
+pin: false
 math: true
 mermaid: true
 ---
