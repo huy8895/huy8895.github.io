@@ -397,8 +397,60 @@ public class MortgageAccount extends LoanAccount {
 ## Java 16 (2021)
 
 - **Pattern Matching cho `instanceof`** trở nên chính thức, giúp viết điều kiện kiểm tra kiểu ngắn gọn hơn.
-- **Records**: Chính thức trở thành tính năng của ngôn ngữ.
+```java
+// Ví dụ 1: Xử lý đối tượng
+public void process(Object input) {
+    if (input instanceof String s) {
+        System.out.println("Độ dài chuỗi: " + s.length());
+    } else if (input instanceof List<?> list && !list.isEmpty()) {
+        System.out.println("Phần tử đầu: " + list.get(0));
+    }
+}
+
+// Ví dụ 2: Kết hợp với biểu thức
+String format(Object o) {
+    return o instanceof Integer i ? "Số nguyên: " + i 
+         : o instanceof Double d ? "Số thực: " + d 
+         : "Kiểu không hỗ trợ";
+}
+```
+
+- **Records** chính thức trở thành tính năng của ngôn ngữ.
+```java
+// Record cho thông tin địa chỉ
+public record Address(
+    String street,
+    String city,
+    String postalCode
+) {
+    // Thêm phương thức validate
+    public boolean isValid() {
+        return postalCode.matches("\\d{6}");
+    }
+}
+
+// Sử dụng record
+Address addr = new Address("123 Lê Lợi", "Hà Nội", "100000");
+System.out.println(addr.city()); // Hà Nội
+System.out.println("Valid: " + addr.isValid()); // true
+```
+
 - **Vector API (Incubator)**: Hỗ trợ tối ưu hóa tính toán dựa trên phần cứng SIMD.
+```java
+// Ví dụ tính tổng 2 vector
+int[] a = {1, 2, 3, 4};
+int[] b = {5, 6, 7, 8};
+
+IntVector vectorA = IntVector.fromArray(IntVector.SPECIES_128, a, 0);
+IntVector vectorB = IntVector.fromArray(IntVector.SPECIES_128, b, 0);
+IntVector result = vectorA.add(vectorB);
+
+int[] resultArray = new int[4];
+result.intoArray(resultArray, 0); // [6, 8, 10, 12]
+```
+
+> Vector API giúp tăng tốc các phép toán số học song song lên đến 4-8 lần
+{: .prompt-tip }
 
 ## Java 17 (2021) - Phiên bản LTS
 
