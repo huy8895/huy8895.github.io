@@ -91,8 +91,43 @@ CompletableFuture.supplyAsync(() -> fetchDataFromAPI())
 {: .prompt-note }
 
 - **Module System (Project Jigsaw)**: Giúp chia nhỏ ứng dụng thành các mô-đun độc lập, dễ quản lý và bảo trì.
+```java
+// module-info.java
+module com.example.myapp {
+    requires java.base;
+    requires java.sql;
+    exports com.example.myapp.api;
+}
+```
+
 - **JShell (REPL)**: Công cụ tương tác dòng lệnh để thử nghiệm các đoạn mã Java.
+```java
+jshell> int a = 10
+jshell> int b = 20
+jshell> System.out.println("Tổng: " + (a + b))
+Tổng: 30
+```
+
 - **Cải tiến API Stream** và **Factory Methods cho Collections**: Đơn giản hóa việc khởi tạo danh sách, tập hợp và bản đồ.
+```java
+// Tạo List bất biến
+List<String> colors = List.of("Đỏ", "Xanh", "Vàng");
+
+// Tạo Map bất biến
+Map<String, Integer> populations = Map.of(
+    "Hà Nội", 8_000_000,
+    "TPHCM", 9_000_000
+);
+
+// takeWhile trong Stream
+List<Integer> numbers = List.of(2, 4, 6, 7, 8, 10);
+List<Integer> evenNumbers = numbers.stream()
+                                 .takeWhile(n -> n % 2 == 0)
+                                 .collect(Collectors.toList()); // [2, 4, 6]
+```
+
+> Các collection tạo bởi `List.of()`, `Set.of()`, `Map.of()` là bất biến và không thể thêm/xóa phần tử
+{: .prompt-tip }
 
 ## Java 10 (2018)
 
