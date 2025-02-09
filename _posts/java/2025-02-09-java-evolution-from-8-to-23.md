@@ -607,8 +607,68 @@ virtualThread.join(Duration.ofSeconds(10));
 
 ## Java 21 (2023) - Phiên bản LTS
 
-- Hoàn thiện các tính năng mới như virtual threads, pattern matching và structured concurrency.
-- **String Templates (Preview)**: Cung cấp cú pháp mới để xử lý chuỗi động hiệu quả hơn.
+> Java 21 là phiên bản LTS với nhiều cải tiến đáng chú ý về hiệu năng và cú pháp
+{: .prompt-important }
+
+- **Virtual Threads** (Chính thức): Cho phép tạo hàng triệu luồng ảo với chi phí thấp.
+
+```java
+// Tạo và quản lý virtual threads
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    for (int i = 0; i < 10_000; i++) {
+        executor.submit(() -> {
+            Thread.sleep(Duration.ofMillis(100));
+            return processRequest(i);
+        });
+    }
+}
+
+// Tạo virtual thread đơn lẻ
+Thread.ofVirtual()
+    .name("data-loader")
+    .start(() -> loadDataFromFile("data.csv"));
+```
+
+- **String Templates (Preview)**: Cú pháp mới cho phép nhúng biến vào chuỗi an toàn.
+
+```java
+String user = "Huy";
+LocalDateTime now = LocalDateTime.now();
+String message = STR."""
+    Xin chào \{user},
+    Thời gian hiện tại: \{now.format(DateTimeFormatter.ISO_DATE_TIME)}
+    Số lượng: \{Math.random() * 100:%.2f}
+    """;
+```
+
+- **Pattern Matching for switch** (Chính thức):
+
+```java
+String format(Object o) {
+    return switch (o) {
+        case null -> "null";
+        case Integer i -> "int: " + i;
+        case Long l -> "long: " + l;
+        case String s -> "String: " + s;
+        default -> "Unknown";
+    };
+}
+```
+
+- **Sequenced Collections**:
+
+```java
+// Các phương thức mới cho collections
+List<Integer> list = new ArrayList<>(List.of(3, 1, 4));
+list.addFirst(0);  // [0, 3, 1, 4]
+list.addLast(5);   // [0, 3, 1, 4, 5]
+
+int first = list.getFirst(); // 0
+int last = list.getLast();   // 5
+```
+
+> Virtual Threads giúp xử lý đồng thời hiệu quả cho các ứng dụng I/O intensive
+{: .prompt-tip }
 
 ## Java 22 (2024)
 
