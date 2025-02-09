@@ -676,6 +676,7 @@ int last = list.getLast();   // 5
 {: .prompt-important }
 
 - **Scoped Values (Incubator)**: Quản lý dữ liệu an toàn giữa các luồng
+
 ```java
 final ScopedValue<String> CURRENT_USER = ScopedValue.newInstance();
 
@@ -689,6 +690,7 @@ void processRequest() {
 ```
 
 - **Stream Gatherers (Preview)**: Thêm bộ thu thập tùy biến cho Stream
+
 ```java
 List<String> filtered = Stream.of("a", "b", null, "c")
     .gather(Gatherers.filter(Objects::nonNull))
@@ -696,6 +698,7 @@ List<String> filtered = Stream.of("a", "b", null, "c")
 ```
 
 - **Structured Concurrency (Incubator)**: Quản lý tác vụ đồng thời
+
 ```java
 try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
     Future<String> user = scope.fork(this::fetchUser);
@@ -707,6 +710,7 @@ try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
 ```
 
 - **Statements Before Super**: Khởi tạo trước khi gọi constructor cha
+
 ```java
 public class Circle extends Shape {
     private final double radius;
@@ -719,6 +723,7 @@ public class Circle extends Shape {
 ```
 
 - **Class-File API (Preview)**: Thao tác với file .class
+
 ```java
 ClassFile cf = ClassFile.of();
 ClassModel model = cf.parse(Paths.get("MyClass.class"));
@@ -726,12 +731,14 @@ model.methods().forEach(m -> System.out.println(m.methodName()));
 ```
 
 - **Region Pinning cho G1 GC**: Tối ưu thu gom rác
+
 ```bash
 # Kích hoạt tính năng
 java -XX:+UseG1GC -XX:+G1RegionPinning MyApp
 ```
 
 - **String Templates (Second Preview)**: Chuỗi template nâng cao
+
 ```java
 String name = "Huy";
 int age = 25;
@@ -739,6 +746,7 @@ String info = STR."Tên: \{name}, Tuổi: \{age}";
 ```
 
 - **Unnamed Variables & Patterns**: Bỏ qua biến không dùng
+
 ```java
 // Bỏ qua exception trong try-with-resources
 try (var _ = new FileInputStream("data.txt")) {
@@ -754,18 +762,20 @@ if (obj instanceof Point(int x, _)) {
 > Các tính năng incubator/preview cần kích hoạt bằng flag `--enable-preview --add-modules jdk.incubator.concurrent`
 {: .prompt-warning }
 
-## Java 23 (Dự kiến 2026)
+## Java 23 (2024)
 
 > **Java 23** mang đến những cải tiến đột phá về hiệu năng và trải nghiệm lập trình
 {: .prompt-important }
 
 - **Generational ZGC**: Nâng cấp trình dọn rác ZGC với cơ chế phân tách theo thế hệ
+
 ```bash
 # Kích hoạt Generational ZGC
 java -XX:+UseZGC -Xmx16g -XX:+ZGenerational MyApp
 ```
 
 - **Pattern Matching mở rộng**: Hỗ trợ pattern matching cho kiểu nguyên thủy và mảng
+
 ```java
 // Kiểm tra mảng số nguyên
 if (obj instanceof int[] arr && arr.length > 0) {
@@ -774,6 +784,7 @@ if (obj instanceof int[] arr && arr.length > 0) {
 ```
 
 - **Stream Gatherers (Preview)**: Thêm bộ thu thập dữ liệu tùy biến cho Stream API
+
 ```java
 List<String> result = Stream.of("a", "b", "c", "d")
     .gather(s -> s.map(String::toUpperCase))
@@ -781,18 +792,21 @@ List<String> result = Stream.of("a", "b", "c", "d")
 ```
 
 - **Class-File API (Preview)**: API mới cho thao tác với file class
+
 ```java
 ClassFile classFile = ClassFile.read(Paths.get("MyClass.class"));
 classFile.methods().forEach(m -> System.out.println(m.name()));
 ```
 
 - **Vector API (Incubator)**: Tối ưu hóa tính toán vector cho CPU hiện đại
+
 ```java
 FloatVector vectorA = FloatVector.fromArray(SPECIES, arr, 0);
 FloatVector result = vectorA.mul(2).add(vectorB);
 ```
 
 - **JavaDoc Markdown**: Viết tài liệu bằng cú pháp Markdown
+
 ```java
 /**
  * # Ví dụ tính tổng
