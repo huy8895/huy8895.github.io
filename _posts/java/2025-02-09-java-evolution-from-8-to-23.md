@@ -91,6 +91,7 @@ CompletableFuture.supplyAsync(() -> fetchDataFromAPI())
 {: .prompt-warning }
     
 - **Module System (Project Jigsaw)**: Giúp chia nhỏ ứng dụng thành các mô-đun độc lập, dễ quản lý và bảo trì.
+
 ```java
 // module-info.java
 module com.example.myapp {
@@ -130,6 +131,7 @@ public class Main {
 {: .prompt-warning }
 
 - **JShell (REPL)**: Công cụ tương tác dòng lệnh để thử nghiệm các đoạn mã Java.
+
 ```java
 jshell> int a = 10
 jshell> int b = 20
@@ -162,7 +164,23 @@ List<Integer> evenNumbers = numbers.stream()
 ## Java 10 (2018)
 
 - **Local-Variable Type Inference (`var`)**: Cho phép khai báo biến mà không cần chỉ rõ kiểu dữ liệu, giúp code ngắn gọn và dễ đọc hơn.
+
+```java
+var list = List.of("Java", "Python", "C++");
+var map = Map.of("Hà Nội", 8_000_000, "TPHCM", 9_000_000);
+
+list.forEach((var item) -> System.out.println(item.toUpperCase()));
+```
+
+> Chỉ dùng `var` khi kiểu dữ liệu rõ ràng từ phía bên phải
+{: .prompt-tip }
+
 - **Cải tiến G1 Garbage Collector**: Tối ưu hóa thời gian dừng của quá trình thu gom rác.
+
+```bash
+# Kích hoạt G1 GC với các tham số tối ưu
+java -XX:+UseG1GC -Xmx4g -XX:MaxGCPauseMillis=200 MyApp
+```
 
 ## Java 11 (2018) - Phiên bản LTS
 
