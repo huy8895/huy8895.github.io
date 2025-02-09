@@ -334,8 +334,73 @@ String formatted = switch (obj) {
 ## Java 15 (2020)
 
 - **Sealed Classes (Preview)**: Cho phép giới hạn các lớp có thể kế thừa, tăng khả năng kiểm soát cấu trúc hệ thống.
+
+```java
+// Định nghĩa sealed class cho các hình học
+public sealed abstract class HinhHoc 
+    permits HinhTron, HinhVuong, HinhTamGiac {
+    
+    public abstract double tinhDienTich();
+}
+
+// Lớp con phải khai báo final hoặc non-sealed
+public final class HinhTron extends HinhHoc {
+    private final double banKinh;
+    
+    public HinhTron(double banKinh) {
+        this.banKinh = banKinh;
+    }
+    
+    @Override
+    public double tinhDienTich() {
+        return Math.PI * banKinh * banKinh;
+    }
+}
+
+public non-sealed class HinhVuong extends HinhHoc {
+    private final double canh;
+    
+    public HinhVuong(double canh) {
+        this.canh = canh;
+    }
+    
+    @Override
+    public double tinhDienTich() {
+        return canh * canh;
+    }
+}
+```
+
 - **Text Blocks**: Chính thức được đưa vào sử dụng.
+
+```java
+// Template HTML với text blocks
+String html = """
+    <div class="thong-bao">
+        <h1>Chào mừng %s đến với hệ thống</h1>
+        <p>Bạn có %d thông báo mới</p>
+        <ul>
+            <li>Ưu đãi tháng 12</li>
+            <li>Cập nhật hệ thống</li>
+        </ul>
+    </div>
+    """.formatted("Nguyễn Văn A", 5);
+```
+
 - **Hidden Classes**: Hỗ trợ các lớp ẩn cho các framework, giúp tăng cường bảo mật và tối ưu hóa reflection.
+
+```java
+// Ví dụ sử dụng hidden class cho dynamic proxy
+MethodHandles.Lookup lookup = MethodHandles.lookup();
+byte[] classBytes = generateProxyClass(); // Tạo bytecode động
+
+Class<?> hiddenClass = lookup.defineHiddenClass(classBytes, true).lookupClass();
+Runnable task = (Runnable) hiddenClass.getConstructor().newInstance();
+task.run();
+```
+
+> Sealed Classes giúp kiểm soát chặt chẽ hệ thống kế thừa, phù hợp cho các domain model phức tạp
+{: .prompt-tip }
 
 ## Java 16 (2021)
 
