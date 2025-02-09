@@ -397,6 +397,7 @@ public class MortgageAccount extends LoanAccount {
 ## Java 16 (2021)
 
 - **Pattern Matching cho `instanceof`** trở nên chính thức, giúp viết điều kiện kiểm tra kiểu ngắn gọn hơn.
+
 ```java
 // Ví dụ 1: Xử lý đối tượng
 public void process(Object input) {
@@ -416,6 +417,7 @@ String format(Object o) {
 ```
 
 - **Records** chính thức trở thành tính năng của ngôn ngữ.
+
 ```java
 // Record cho thông tin địa chỉ
 public record Address(
@@ -436,6 +438,7 @@ System.out.println("Valid: " + addr.isValid()); // true
 ```
 
 - **Vector API (Incubator)**: Hỗ trợ tối ưu hóa tính toán dựa trên phần cứng SIMD.
+
 ```java
 // Ví dụ tính tổng 2 vector
 int[] a = {1, 2, 3, 4};
@@ -454,12 +457,22 @@ result.intoArray(resultArray, 0); // [6, 8, 10, 12]
 
 ## Java 17 (2021) - Phiên bản LTS
 
-> Nâng cấp lên Java 17 để nhận hỗ trợ dài hạn và các cải tiến hiệu năng
-{: .prompt-important }
-
 - **Sealed Classes** được đưa vào chính thức.
 - **Foreign Function & Memory API (Incubator)**: Cho phép gọi hàm bên ngoài JVM và thao tác với bộ nhớ ngoài heap.
 - Cải tiến bảo mật với **Context-Specific Deserialization Filters**.
+- **Pattern Matching cho switch (Preview)**:
+
+```java
+String formatValue(Object value) {
+    return switch (value) {
+        case null -> "Giá trị null";
+        case Integer i -> String.format("Số nguyên: %d", i);
+        case Double d -> String.format("Số thực: %.2f", d);
+        case String s -> "Chuỗi: " + s;
+        default -> "Kiểu không xác định";
+    };
+}
+```
 
 ## Java 18 (2022)
 
