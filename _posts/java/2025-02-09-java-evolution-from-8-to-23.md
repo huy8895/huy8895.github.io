@@ -26,25 +26,29 @@ Trong bài viết này, chúng ta sẽ cùng tổng hợp những cải tiến v
 - **Date/Time API mới (java.time)**: Thay thế Date/Calendar cũ bằng API xử lý ngày giờ hiện đại và an toàn hơn
 - **CompletableFuture**: Cải tiến lập trình bất đồng bộ với API Future mạnh mẽ hơn
 
+**Lambda Expressions - Biểu thức hàm ngắn gọn**
 ```java
 // Ví dụ Lambda Expressions
 List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
-numbers.forEach(n -> System.out.println(n * 2)); 
+numbers.forEach(n -> System.out.println(n * 2));
+```
 
-// Ví dụ Stream API 
+**Stream API - Xử lý tập dữ liệu theo kiểu chuỗi**
+```java
 List<String> filtered = languages.stream()
                                .filter(s -> s.length() > 3)
                                .map(String::toUpperCase)
                                .collect(Collectors.toList());
 ```
 
+**Optional - Tránh NullPointerException**
 ```java
-// Ví dụ Optional
 Optional<String> optionalName = Optional.ofNullable(getName());
 String result = optionalName.orElseGet(() -> "Guest");
 optionalName.ifPresent(name -> System.out.println("Xin chào " + name));
 ```
 
+**Default Methods - Mở rộng interface linh hoạt**
 ```java
 // Ví dụ Default Methods
 interface Calculator {
@@ -58,15 +62,15 @@ class ScientificCalculator implements Calculator {
 }
 ```
 
+**Date/Time API - Quản lý thời gian hiện đại**
 ```java
-// Ví dụ Date/Time API
 LocalDateTime now = LocalDateTime.now();
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 System.out.println("Thời gian hiện tại: " + now.format(formatter));
 ```
 
+**CompletableFuture - Xử lý bất đồng bộ nâng cao**
 ```java
-// Ví dụ CompletableFuture
 CompletableFuture.supplyAsync(() -> fetchDataFromAPI())
                 .thenApply(data -> processData(data))
                 .thenAccept(result -> saveToDatabase(result))
