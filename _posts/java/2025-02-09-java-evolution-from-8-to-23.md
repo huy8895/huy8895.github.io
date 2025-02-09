@@ -677,9 +677,58 @@ int last = list.getLast();   // 5
 
 ## Java 23 (Dự kiến 2026)
 
-- **API cho AI và Machine Learning**: Hỗ trợ tích hợp các thư viện trí tuệ nhân tạo và học máy.
-- **Cải tiến Module System**: Tối ưu hóa việc quản lý mô-đun và triển khai ứng dụng.
-- **Reactive Programming**: Hỗ trợ lập trình bất đồng bộ mạnh mẽ hơn cho các ứng dụng hiện đại.
+> **Java 23** mang đến những cải tiến đột phá về hiệu năng và trải nghiệm lập trình
+{: .prompt-important }
+
+- **Generational ZGC**: Nâng cấp trình dọn rác ZGC với cơ chế phân tách theo thế hệ
+```bash
+# Kích hoạt Generational ZGC
+java -XX:+UseZGC -Xmx16g -XX:+ZGenerational MyApp
+```
+
+- **Pattern Matching mở rộng**: Hỗ trợ pattern matching cho kiểu nguyên thủy và mảng
+```java
+// Kiểm tra mảng số nguyên
+if (obj instanceof int[] arr && arr.length > 0) {
+    System.out.println("Phần tử đầu: " + arr[0]);
+}
+```
+
+- **Stream Gatherers (Preview)**: Thêm bộ thu thập dữ liệu tùy biến cho Stream API
+```java
+List<String> result = Stream.of("a", "b", "c", "d")
+    .gather(s -> s.map(String::toUpperCase))
+    .toList(); // [A, B, C, D]
+```
+
+- **Class-File API (Preview)**: API mới cho thao tác với file class
+```java
+ClassFile classFile = ClassFile.read(Paths.get("MyClass.class"));
+classFile.methods().forEach(m -> System.out.println(m.name()));
+```
+
+- **Vector API (Incubator)**: Tối ưu hóa tính toán vector cho CPU hiện đại
+```java
+FloatVector vectorA = FloatVector.fromArray(SPECIES, arr, 0);
+FloatVector result = vectorA.mul(2).add(vectorB);
+```
+
+- **JavaDoc Markdown**: Viết tài liệu bằng cú pháp Markdown
+```java
+/**
+ * # Ví dụ tính tổng
+ * 
+ * Phương thức này thực hiện **phép cộng** hai số nguyên
+ * 
+ * ```java
+ * int sum = add(2, 3); // = 5
+ * ```
+ */
+public int add(int a, int b) { return a + b; }
+```
+
+> Các tính năng preview cần kích hoạt bằng flag `--enable-preview`
+{: .prompt-warning }
 
 ## Code mẫu trong Java
 
