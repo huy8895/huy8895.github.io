@@ -608,7 +608,7 @@ virtualThread.join(Duration.ofSeconds(10));
 ## Java 21 (2023) - Phiên bản LTS
 
 > Java 21 là phiên bản LTS với nhiều cải tiến đáng chú ý về hiệu năng và cú pháp
-{: .prompt-important }
+{: .prompt-info }
 
 - **Virtual Threads** (Chính thức): Cho phép tạo hàng triệu luồng ảo với chi phí thấp.
 
@@ -765,7 +765,7 @@ if (obj instanceof Point(int x, _)) {
 ## Java 23 (2024)
 
 > **Java 23** mang đến những cải tiến đột phá về hiệu năng và trải nghiệm lập trình
-{: .prompt-important }
+{: .prompt-info }
 
 - **Generational ZGC**: Nâng cấp trình dọn rác ZGC với cơ chế phân tách theo thế hệ
 
