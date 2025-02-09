@@ -19,6 +19,8 @@ Trong bài viết này, chúng ta sẽ cùng tổng hợp những cải tiến v
 
 ## Java 8
 
+> **Lưu ý quan trọng**: Các tính năng Java 8 là nền tảng cho mọi phiên bản sau này. Hãy nắm vững Stream API và Lambda trước khi học các tính năng mới hơn.
+
 - **Tính ổn định và phổ biến**: Java 8 là một trong những phiên bản được sử dụng rộng rãi.
 - **Lambda Expressions** và **Stream API**: Mở ra kỷ nguyên lập trình hàm trong Java.
 - **Optional**: Giúp xử lý giá trị null một cách an toàn.
@@ -28,10 +30,12 @@ Trong bài viết này, chúng ta sẽ cùng tổng hợp những cải tiến v
 
 **Lambda Expressions - Biểu thức hàm ngắn gọn**
 ```java
-// Ví dụ Lambda Expressions
-List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
-numbers.forEach(n -> System.out.println(n * 2));
+// Ví dụ Lambda với Comparator
+List<String> names = Arrays.asList("Alice", "Bob", "Charlie");
+Collections.sort(names, (a, b) -> a.length() - b.length());
 ```
+
+{% include tip.html content="Dùng method reference khi có thể: `String::length` thay vì `s -> s.length()`" %}
 
 **Stream API - Xử lý tập dữ liệu theo kiểu chuỗi**
 ```java
@@ -82,87 +86,11 @@ CompletableFuture.supplyAsync(() -> fetchDataFromAPI())
 
 ## Java 9 (2017)
 
+{% include note.html content="Project Jigsaw (module system) có thể gây breaking change với các thư viện cũ" %}
+
 - **Module System (Project Jigsaw)**: Giúp chia nhỏ ứng dụng thành các mô-đun độc lập, dễ quản lý và bảo trì.
 - **JShell (REPL)**: Công cụ tương tác dòng lệnh để thử nghiệm các đoạn mã Java.
 - **Cải tiến API Stream** và **Factory Methods cho Collections**: Đơn giản hóa việc khởi tạo danh sách, tập hợp và bản đồ.
-- **Process API**: Quản lý các tiến trình hệ thống hiệu quả hơn.
-- **Reactive Streams**: Hỗ trợ lập trình reactive với Flow API.
-- **Try-With-Resources cải tiến**: Cho phép sử dụng biến final trong khối try-with-resources.
-- **Private Methods trong Interface**: Thêm phương thức private cho interface.
-
-**Module System - Tạo ứng dụng module hóa**
-```java
-// module-info.java
-module com.example.myapp {
-    requires java.base;
-    exports com.example.myapp.api;
-}
-```
-
-**JShell - Công cụ REPL tương tác**
-```java
-jshell> List<String> colors = List.of("Red", "Green", "Blue")
-colors ==> [Red, Green, Blue]
-jshell> colors.stream().filter(c -> c.startsWith("B")).forEach(System.out::println)
-Blue
-```
-
-**Factory Methods cho Collections - Khởi tạo collection ngắn gọn**
-```java
-List<String> immutableList = List.of("Java", "Python", "C++");
-Set<Integer> immutableSet = Set.of(1, 2, 3);
-Map<String, Integer> immutableMap = Map.ofEntries(
-    Map.entry("Alice", 25),
-    Map.entry("Bob", 30)
-);
-```
-
-**Process API - Quản lý tiến trình hệ thống**
-```java
-ProcessHandle currentProcess = ProcessHandle.current();
-System.out.println("PID: " + currentProcess.pid());
-System.out.println("Thời gian chạy: " + currentProcess.info().totalCpuDuration().orElse(null));
-```
-
-**Reactive Streams - Xử lý luồng dữ liệu bất đồng bộ**
-```java
-SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
-publisher.subscribe(new Subscriber<>() {
-    public void onSubscribe(Subscription subscription) {
-        subscription.request(1);
-    }
-    public void onNext(String item) {
-        System.out.println("Nhận dữ liệu: " + item);
-    }
-    // ... các phương thức khác
-});
-publisher.submit("Dữ liệu mẫu");
-```
-
-**Try-With-Resources cải tiến**
-```java
-BufferedReader reader = new BufferedReader(new FileReader("data.txt"));
-try (reader) { // Sử dụng biến đã khai báo
-    String line = reader.readLine();
-    while (line != null) {
-        System.out.println(line);
-        line = reader.readLine();
-    }
-}
-```
-
-**Private Methods trong Interface**
-```java
-interface Logger {
-    default void logInfo(String message) {
-        log(message, "INFO");
-    }
-    
-    private void log(String message, String level) {
-        System.out.println("[" + level + "] " + LocalDateTime.now() + ": " + message);
-    }
-}
-```
 
 ## Java 10 (2018)
 
@@ -170,6 +98,8 @@ interface Logger {
 - **Cải tiến G1 Garbage Collector**: Tối ưu hóa thời gian dừng của quá trình thu gom rác.
 
 ## Java 11 (2018) - Phiên bản LTS
+
+{% include warning.html content="Java 11 yêu cầu cập nhật các dependencies cũ không hỗ trợ module system" %}
 
 - Phiên bản **LTS (Long-Term Support)**: Đảm bảo hỗ trợ và ổn định lâu dài.
 - **HTTP Client API**: Hỗ trợ giao tiếp với HTTP/2 và WebSocket.
@@ -205,6 +135,8 @@ interface Logger {
 - **Vector API (Incubator)**: Hỗ trợ tối ưu hóa tính toán dựa trên phần cứng SIMD.
 
 ## Java 17 (2021) - Phiên bản LTS
+
+{% include tip.html content="LTS quan trọng": Nâng cấp lên Java 17 để nhận hỗ trợ dài hạn và các cải tiến hiệu năng" %}
 
 - **Sealed Classes** được đưa vào chính thức.
 - **Foreign Function & Memory API (Incubator)**: Cho phép gọi hàm bên ngoài JVM và thao tác với bộ nhớ ngoài heap.
@@ -265,6 +197,7 @@ public class Main {
     public record Person(String name, int age) {}
 }
 ```
+
 ## Kết luận
 Qua hành trình phát triển từ Java 8 đến Java 23, chúng ta thấy rằng ngôn ngữ Java không ngừng cải tiến để đáp ứng nhu cầu của lập trình viên và xu hướng công nghệ hiện đại. Các tính năng mới như var, records, pattern matching, virtual threads, và các cải tiến về bộ thu gom rác, mô-đun hóa cũng như bảo mật đã làm cho Java trở nên linh hoạt và mạnh mẽ hơn rất nhiều.
 
