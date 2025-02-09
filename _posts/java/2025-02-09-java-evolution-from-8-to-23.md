@@ -254,7 +254,43 @@ MethodTypeDesc concatDesc = MethodTypeDesc.of(stringClass, stringClass);
 ## Java 13 (2019)
 
 - **Text Blocks (Preview)**: Giúp viết chuỗi nhiều dòng dễ đọc hơn.
-- **Dynamic CDS Archives**: Giúp cải thiện thời gian khởi động ứng dụng qua việc sử dụng lưu trữ dữ liệu lớp (Class Data Sharing).
+
+```java
+// JSON example
+String json = """
+    {
+        "name": "Nguyễn Văn A",
+        "age": 30,
+        "address": {
+            "city": "Hà Nội",
+            "district": "Cầu Giấy"
+        }
+    }
+    """;
+
+// HTML template
+String html = """
+    <html>
+        <body>
+            <h1>Chào mừng %s</h1>
+            <p>Bạn có %d thông báo mới</p>
+        </body>
+    </html>
+    """.formatted("Huy", 5);
+```
+
+- **Dynamic CDS Archives**: Cải thiện thời gian khởi động ứng dụng qua việc tạo archive tự động.
+
+```bash
+# Tạo Class Data Archive
+java -XX:ArchiveClassesAtExit=app.jsa -jar myapp.jar
+
+# Sử dụng archive đã tạo
+java -XX:SharedArchiveFile=app.jsa -jar myapp.jar
+```
+
+> Text Blocks giúp code dễ đọc hơn khi làm việc với JSON/XML/SQL
+{: .prompt-tip }
 
 ## Java 14 (2020)
 
