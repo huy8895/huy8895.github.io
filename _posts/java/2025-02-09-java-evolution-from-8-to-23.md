@@ -35,7 +35,8 @@ List<String> names = Arrays.asList("Alice", "Bob", "Charlie");
 Collections.sort(names, (a, b) -> a.length() - b.length());
 ```
 
-{% include tip.html content="Dùng method reference khi có thể: `String::length` thay vì `s -> s.length()`" %}
+> Dùng method reference khi có thể: `String::length` thay vì `s -> s.length()`
+{: .prompt-tip }
 
 **Stream API - Xử lý tập dữ liệu theo kiểu chuỗi**
 ```java
@@ -86,7 +87,8 @@ CompletableFuture.supplyAsync(() -> fetchDataFromAPI())
 
 ## Java 9 (2017)
 
-{% include note.html content="Project Jigsaw (module system) có thể gây breaking change với các thư viện cũ" %}
+> Project Jigsaw (module system) có thể gây breaking change với các thư viện cũ
+{: .prompt-note }
 
 - **Module System (Project Jigsaw)**: Giúp chia nhỏ ứng dụng thành các mô-đun độc lập, dễ quản lý và bảo trì.
 - **JShell (REPL)**: Công cụ tương tác dòng lệnh để thử nghiệm các đoạn mã Java.
@@ -99,7 +101,8 @@ CompletableFuture.supplyAsync(() -> fetchDataFromAPI())
 
 ## Java 11 (2018) - Phiên bản LTS
 
-{% include warning.html content="Java 11 yêu cầu cập nhật các dependencies cũ không hỗ trợ module system" %}
+> Java 11 yêu cầu cập nhật các dependencies cũ không hỗ trợ module system
+{: .prompt-warning }
 
 - Phiên bản **LTS (Long-Term Support)**: Đảm bảo hỗ trợ và ổn định lâu dài.
 - **HTTP Client API**: Hỗ trợ giao tiếp với HTTP/2 và WebSocket.
@@ -136,7 +139,8 @@ CompletableFuture.supplyAsync(() -> fetchDataFromAPI())
 
 ## Java 17 (2021) - Phiên bản LTS
 
-{% include tip.html content="LTS quan trọng": Nâng cấp lên Java 17 để nhận hỗ trợ dài hạn và các cải tiến hiệu năng" %}
+> Nâng cấp lên Java 17 để nhận hỗ trợ dài hạn và các cải tiến hiệu năng
+{: .prompt-important }
 
 - **Sealed Classes** được đưa vào chính thức.
 - **Foreign Function & Memory API (Incubator)**: Cho phép gọi hàm bên ngoài JVM và thao tác với bộ nhớ ngoài heap.
