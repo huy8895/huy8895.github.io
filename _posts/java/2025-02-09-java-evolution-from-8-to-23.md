@@ -100,6 +100,35 @@ module com.example.myapp {
 }
 ```
 
+**Sử dụng module trong ứng dụng**:
+```java
+// Trong package được export
+package com.example.myapp.api;
+
+public class DataService {
+    public static String fetchData() {
+        return "Dữ liệu từ module";
+    }
+}
+
+// Module khác sử dụng
+module com.example.client {
+    requires com.example.myapp;
+}
+
+// Sử dụng trong code
+import com.example.myapp.api.DataService;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(DataService.fetchData());
+    }
+}
+```
+
+> Lưu ý: Các package không được export sẽ không thể truy cập từ module khác
+{: .prompt-warning }
+
 - **JShell (REPL)**: Công cụ tương tác dòng lệnh để thử nghiệm các đoạn mã Java.
 ```java
 jshell> int a = 10
