@@ -219,8 +219,37 @@ System.out.println(" ".isBlank());         // true
 
 ## Java 12 (2019)
 
-- **Switch Expressions (Preview)**: Cung cấp cú pháp mới cho `switch`, cho phép sử dụng như một biểu thức trả về giá trị.
-- **JVM Constants API**: Hỗ trợ thao tác với các constant trong JVM.
+- **Switch Expressions (Preview)**: Cung cấp cú pháp mới cho `switch` với arrow syntax và trả về giá trị.
+
+```java
+// Switch expression dạng arrow syntax
+String dayType = switch (day) {
+    case "MON", "TUE", "WED", "THU", "FRI" -> "Ngày làm việc";
+    case "SAT", "SUN" -> "Ngày nghỉ";
+    default -> throw new IllegalArgumentException("Ngày không hợp lệ: " + day);
+};
+
+// Switch trả về giá trị
+int numLetters = switch (fruit) {
+    case "apple" -> 5;
+    case "banana" -> 6;
+    case "orange" -> 6;
+    default -> throw new IllegalStateException();
+};
+```
+
+- **JVM Constants API**: Hỗ trợ thao tác với các constant trong JVM qua lớp `ConstantDesc`.
+
+```java
+// Ví dụ sử dụng Constant API
+import java.lang.constant.*;
+
+ClassDesc stringClass = ConstantDescs.CD_String;
+MethodTypeDesc concatDesc = MethodTypeDesc.of(stringClass, stringClass);
+```
+
+> Switch expressions trong Java 12 là tính năng preview - cần kích hoạt với `--enable-preview`
+{: .prompt-info }
 
 ## Java 13 (2019)
 
