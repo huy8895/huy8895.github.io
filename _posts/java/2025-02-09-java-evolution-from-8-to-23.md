@@ -333,74 +333,66 @@ String formatted = switch (obj) {
 
 ## Java 15 (2020)
 
-- **Sealed Classes (Preview)**: Cho phép giới hạn các lớp có thể kế thừa, tăng khả năng kiểm soát cấu trúc hệ thống.
+- **Sealed Classes (Preview)**: Cho phép kiểm soát chặt chẽ các lớp được phép kế thừa, giúp xây dựng hệ thống phân cấp lớp an toàn hơn. Đặc biệt hữu ích khi xây dựng các domain model phức tạp.
 
 ```java
-// Định nghĩa sealed class cho các hình học
-public sealed abstract class HinhHoc 
-    permits HinhTron, HinhVuong, HinhTamGiac {
+// Sealed class định nghĩa các loại tài khoản ngân hàng
+public sealed abstract class BankAccount 
+    permits SavingsAccount, CheckingAccount, LoanAccount {
     
-    public abstract double tinhDienTich();
+    protected double balance;
+    
+    public abstract void deposit(double amount);
+    public abstract void withdraw(double amount);
 }
 
-// Lớp con phải khai báo final hoặc non-sealed
-public final class HinhTron extends HinhHoc {
-    private final double banKinh;
-    
-    public HinhTron(double banKinh) {
-        this.banKinh = banKinh;
-    }
+// Tài khoản tiết kiệm - final class
+public final class SavingsAccount extends BankAccount {
+    private double interestRate;
     
     @Override
-    public double tinhDienTich() {
-        return Math.PI * banKinh * banKinh;
+    public void deposit(double amount) {
+        balance += amount * (1 + interestRate);
     }
+    
+    // ... các phương thức khác ...
 }
 
-public non-sealed class HinhVuong extends HinhHoc {
-    private final double canh;
-    
-    public HinhVuong(double canh) {
-        this.canh = canh;
-    }
+// Tài khoản vay - non-sealed class
+public non-sealed class LoanAccount extends BankAccount {
+    private double interestRate;
+    private double loanLimit;
     
     @Override
-    public double tinhDienTich() {
-        return canh * canh;
+    public void withdraw(double amount) {
+        if (amount <= loanLimit) {
+            balance -= amount;
+        }
     }
+    // ... có thể được mở rộng thêm ...
+}
+
+// Lớp con của LoanAccount
+public class MortgageAccount extends LoanAccount {
+    private int termYears;
+    // ... triển khai cụ thể ...
 }
 ```
 
-- **Text Blocks**: Chính thức được đưa vào sử dụng.
+**Cơ chế hoạt động**:
+1. Lớp cha khai báo `sealed` và liệt kê các lớp con được phép kế thừa qua từ khóa `permits`
+2. Lớp con phải là:
+   - `final`: Không cho phép kế thừa tiếp
+   - `sealed`: Cho phép kế thừa nhưng phải khai báo lớp con tiếp theo
+   - `non-sealed`: Cho phép kế thừa tự do
 
-```java
-// Template HTML với text blocks
-String html = """
-    <div class="thong-bao">
-        <h1>Chào mừng %s đến với hệ thống</h1>
-        <p>Bạn có %d thông báo mới</p>
-        <ul>
-            <li>Ưu đãi tháng 12</li>
-            <li>Cập nhật hệ thống</li>
-        </ul>
-    </div>
-    """.formatted("Nguyễn Văn A", 5);
-```
+**Lợi ích**:
+- Kiểm soát được các lớp con trong hệ thống phân cấp
+- Tăng tính bảo mật và ổn định của code
+- Hỗ trợ tốt cho pattern matching trong các phiên bản Java mới
 
-- **Hidden Classes**: Hỗ trợ các lớp ẩn cho các framework, giúp tăng cường bảo mật và tối ưu hóa reflection.
-
-```java
-// Ví dụ sử dụng hidden class cho dynamic proxy
-MethodHandles.Lookup lookup = MethodHandles.lookup();
-byte[] classBytes = generateProxyClass(); // Tạo bytecode động
-
-Class<?> hiddenClass = lookup.defineHiddenClass(classBytes, true).lookupClass();
-Runnable task = (Runnable) hiddenClass.getConstructor().newInstance();
-task.run();
-```
-
-> Sealed Classes giúp kiểm soát chặt chẽ hệ thống kế thừa, phù hợp cho các domain model phức tạp
-{: .prompt-tip }
+> Khi sử dụng Sealed Classes, cần khai báo rõ ràng các lớp con được phép kế thừa trong cùng package hoặc module
+{: .prompt-warning }
 
 ## Java 16 (2021)
 
