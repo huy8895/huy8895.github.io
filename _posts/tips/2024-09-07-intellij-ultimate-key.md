@@ -4,7 +4,7 @@ description: ""
 author: huy8895
 date: 2024-09-07 09:15:00 +0700
 categories: [Tool, Intellij]
-tags: [tips, Intellij]
+tags: [Tips, Intellij]
 pin: false
 math: true
 mermaid: true
