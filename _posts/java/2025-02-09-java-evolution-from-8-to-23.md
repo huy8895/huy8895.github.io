@@ -673,7 +673,7 @@ int last = list.getLast();   // 5
 ## Java 22 (2024)
 
 > **Java 22** mang đến các cải tiến tập trung vào hiệu năng, bảo mật và trải nghiệm developer
-{: .prompt-important }
+{: .prompt-info }
 
 - **Scoped Values (Incubator)**: Quản lý dữ liệu an toàn giữa các luồng
 
