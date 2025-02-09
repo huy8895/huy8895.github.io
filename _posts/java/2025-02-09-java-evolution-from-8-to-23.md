@@ -551,9 +551,59 @@ try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
 
 ## Java 20 (2023)
 
-- **Scoped Values (Incubator)**: Hỗ trợ quản lý giá trị theo phạm vi trong xử lý đa luồng.
-- **Virtual Threads (Second Preview)**: Tiếp tục hoàn thiện tính năng luồng ảo.
-- **Record Patterns (Second Preview)**: Mở rộng khả năng pattern matching, đặc biệt khi làm việc với record.
+- **Scoped Values (Incubator)**: Cơ chế mới để chia sẻ dữ liệu an toàn giữa các thread con trong cùng phạm vi.
+
+```java
+final ScopedValue<Connection> DB_CONNECTION = ScopedValue.newInstance();
+
+void handleRequest() {
+    Connection conn = getDatabaseConnection();
+    ScopedValue.where(DB_CONNECTION, conn)
+               .run(() -> {
+                   processData();
+                   generateReport();
+               });
+}
+
+void processData() {
+    Connection currentConn = DB_CONNECTION.get();
+    // Sử dụng connection đã được bind
+}
+```
+
+- **Record Patterns (Second Preview)**: Phân tích cấu trúc record lồng nhau.
+
+```java
+record Coordinate(double lat, double lng) {}
+record Location(String name, Coordinate coord) {}
+
+void printGPS(Object obj) {
+    if (obj instanceof Location(var name, Coordinate(var lat, var lng))) {
+        System.out.printf("%s: %.4f, %.4f%n", name, lat, lng);
+    }
+}
+```
+
+- **Virtual Threads Improvements**:
+
+```java
+// Tạo virtual thread với timeout
+Thread virtualThread = Thread.ofVirtual()
+    .name("data-processor")
+    .start(() -> {
+        try {
+            TimeUnit.SECONDS.sleep(5);
+            System.out.println("Xử lý hoàn tất");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    });
+
+virtualThread.join(Duration.ofSeconds(10));
+```
+
+> Record Patterns giúp xử lý dữ liệu phức tạp dễ dàng hơn với pattern matching
+{: .prompt-tip }
 
 ## Java 21 (2023) - Phiên bản LTS
 
