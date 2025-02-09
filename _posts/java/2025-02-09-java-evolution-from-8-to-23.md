@@ -26,6 +26,56 @@ Trong bài viết này, chúng ta sẽ cùng tổng hợp những cải tiến v
 - **Date/Time API mới (java.time)**: Thay thế Date/Calendar cũ bằng API xử lý ngày giờ hiện đại và an toàn hơn
 - **CompletableFuture**: Cải tiến lập trình bất đồng bộ với API Future mạnh mẽ hơn
 
+```java
+// Ví dụ Lambda Expressions
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+numbers.forEach(n -> System.out.println(n * 2)); 
+
+// Ví dụ Stream API 
+List<String> filtered = languages.stream()
+                               .filter(s -> s.length() > 3)
+                               .map(String::toUpperCase)
+                               .collect(Collectors.toList());
+```
+
+```java
+// Ví dụ Optional
+Optional<String> optionalName = Optional.ofNullable(getName());
+String result = optionalName.orElseGet(() -> "Guest");
+optionalName.ifPresent(name -> System.out.println("Xin chào " + name));
+```
+
+```java
+// Ví dụ Default Methods
+interface Calculator {
+    default double sqrt(int a) {
+        return Math.sqrt(a);
+    }
+}
+
+class ScientificCalculator implements Calculator {
+    // Kế thừa phương thức mặc định
+}
+```
+
+```java
+// Ví dụ Date/Time API
+LocalDateTime now = LocalDateTime.now();
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+System.out.println("Thời gian hiện tại: " + now.format(formatter));
+```
+
+```java
+// Ví dụ CompletableFuture
+CompletableFuture.supplyAsync(() -> fetchDataFromAPI())
+                .thenApply(data -> processData(data))
+                .thenAccept(result -> saveToDatabase(result))
+                .exceptionally(ex -> {
+                    System.out.println("Lỗi: " + ex.getMessage());
+                    return null;
+                });
+```
+
 ## Java 9 (2017)
 
 - **Module System (Project Jigsaw)**: Giúp chia nhỏ ứng dụng thành các mô-đun độc lập, dễ quản lý và bảo trì.
@@ -133,31 +183,6 @@ public class Main {
     public record Person(String name, int age) {}
 }
 ```
-
-Thêm ví dụ về CompletableFuture:
-
-```java
-public class ConcurrencyDemo {
-    public static void main(String[] args) throws Exception {
-        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            // Giả lập tác vụ tốn thời gian
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return "Kết quả xử lý";
-        }).thenApply(result -> {
-            System.out.println("Xử lý tiếp: " + result.toUpperCase());
-            return null;
-        });
-        
-        future.get(); // Đợi hoàn thành
-        System.out.println("Hoàn thành tất cả tác vụ");
-    }
-}
-```
-
 ## Kết luận
 Qua hành trình phát triển từ Java 8 đến Java 23, chúng ta thấy rằng ngôn ngữ Java không ngừng cải tiến để đáp ứng nhu cầu của lập trình viên và xu hướng công nghệ hiện đại. Các tính năng mới như var, records, pattern matching, virtual threads, và các cải tiến về bộ thu gom rác, mô-đun hóa cũng như bảo mật đã làm cho Java trở nên linh hoạt và mạnh mẽ hơn rất nhiều.
 
