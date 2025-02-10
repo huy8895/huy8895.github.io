@@ -11,6 +11,7 @@ mermaid: true
 #image:
 #  path: assets/img/posts/20250210/0.png
 ---
+Trong Java, việc sử dụng enum không chỉ giúp code trở nên an toàn và dễ hiểu mà còn mang lại nhiều lợi ích về hiệu suất cũng như khả năng bảo trì. Dưới đây là 5 cách sử dụng enum một cách hiệu quả mà các senior Java thường áp dụng:
 
 ## 1. Dùng Enum thay thế hằng số số nguyên
 **Ví dụ:** Thay vì dùng các hằng số int cho trạng thái
@@ -141,4 +142,5 @@ OrderStatus nextStatus = current.next();
 
 > **Pro tip:** Sử dụng `Enum::values` để xử lý các trường hợp cần lặp qua tất cả giá trị enum, kết hợp với Annotation Processing để tạo code tự động.
 {: .prompt-tip }
-```
+
+Happy coding!
