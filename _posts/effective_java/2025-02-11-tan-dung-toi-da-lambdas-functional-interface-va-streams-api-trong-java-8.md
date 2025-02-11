@@ -10,6 +10,9 @@ math: false
 mermaid: true
 ---
 
+> "Mã nguồn chất lượng như một bài thơ - ngắn gọn, súc tích và dễ hiểu. Java 8 cung cấp công cụ để biến điều đó thành hiện thực."
+{: .prompt-info }
+
 Java 8 đã mang đến những cải tiến lớn trong lập trình với các tính năng như lambdas, functional interface và Streams API. Bài viết này sẽ giúp bạn tận dụng tối đa các tính năng này thông qua những nguyên tắc và lời khuyên thực tế.
 
 ## 1. Ưu tiên sử dụng lambdas thay vì anonymous classes
@@ -49,7 +52,9 @@ words.sort(comparingInt(String::length));
 
 ### 1.4 Lưu ý quan trọng
 
-- Giữ lambda ngắn gọn (tối ưu trong 1-3 dòng)
+> **Luôn giữ lambda ngắn gọn** - 3 dòng code là giới hạn lý tưởng cho một biểu thức lambda. Nếu logic phức tạp, hãy tách thành phương thức riêng.
+{: .prompt-warning }
+
 - Sử dụng generic types đầy đủ để hỗ trợ type inference
 - Với các thao tác phức tạp, vẫn ưu tiên dùng class truyền thống
 
@@ -210,7 +215,8 @@ BiPredicate<Map<K,V>, Map.Entry<K,V>> removalPredicate = (map, entry) -> map.siz
 
 ### 3.2 Lý do sử dụng interface chuẩn
 
-**Lý do nên dùng interface chuẩn:**
+**Kiến thức nền tảng** - Hiểu rõ 6 functional interface cốt lõi trong package `java.util.function` là chìa khóa để viết code Java 8 hiệu quả.
+
 1. Giảm số lượng interface cần học
 2. Tận dụng các phương thức mặc định (ví dụ: `and()`, `or()` trong Predicate)
 3. Dễ dàng kết hợp với các API khác
@@ -272,6 +278,9 @@ public interface TriPredicate<T, U, V> {
 - Đặt tên theo mẫu `<Hậu tố>Function` (ví dụ: `ToIntBiFunction`)
 
 ### 3.9 Cảnh báo hiệu năng
+
+> ⚠️ **Cảnh báo Boxing/Unboxing** - Sử dụng sai kiểu primitive functional interface có thể gây tốn kém hiệu năng do autoboxing.
+{: .prompt-danger }
 
 ```java
 // Tránh dùng
