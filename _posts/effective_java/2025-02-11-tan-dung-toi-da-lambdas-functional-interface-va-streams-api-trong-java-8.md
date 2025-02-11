@@ -205,6 +205,7 @@ BiPredicate<Map<K,V>, Map.Entry<K,V>> removalPredicate = (map, entry) -> map.siz
 3. Dễ dàng kết hợp với các API khác
 
 **6 functional interface cốt lõi:**
+
 | Interface          | Phương thức     | Ví dụ                  | Ứng dụng điển hình     |
 |--------------------|-----------------|------------------------|------------------------|
 | `Predicate<T>`     | test(T) → bool  | Collection::isEmpty    | Lọc phần tử trong stream |
@@ -505,6 +506,7 @@ public class PowerSet {
 ```
 
 ### Best Practices
+
 | Trường hợp               | Kiểu trả về ưu tiên  | Lý do                     |
 |--------------------------|----------------------|---------------------------|
 | Dữ liệu nhỏ               | `Collection`         | Tương thích cả 2 cách dùng |
