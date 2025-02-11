@@ -425,6 +425,7 @@ Map<Artist, Album> topHits = albums.collect(
 ### Khi nào được phép dùng forEach?
 - Chỉ để consume kết quả cuối cùng
 - Không thực hiện tính toán/phụ thuộc vào thứ tự
+
 ```java
 // Đúng: In kết quả sau khi xử lý
 resultStream.forEach(System.out::println);
