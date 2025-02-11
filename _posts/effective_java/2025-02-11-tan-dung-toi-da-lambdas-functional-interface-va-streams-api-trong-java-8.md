@@ -18,7 +18,7 @@ Java 8 đã mang đến những cải tiến lớn trong lập trình với các
 ## 1. Ưu tiên sử dụng lambdas thay vì anonymous classes
 
 Trước Java 8, các interface với một phương thức trừu tượng (SAM) thường được triển khai thông qua anonymous classes. Cách tiếp cận này tạo ra nhiều boilerplate code và khó đọc. Lambda expressions ra đời giúp giải quyết những vấn đề này bằng cú pháp ngắn gọn và biểu cảm hơn.
-### 1.1 Ví dụ so sánh
+### Ví dụ so sánh
 
 ```java
 // Anonymous class (cũ)
@@ -36,21 +36,21 @@ Collections.sort(words,
 words.sort(comparingInt(String::length));
 ```
 
-### 1.2 Ưu điểm chính
+### Ưu điểm chính
 
 - Tự động suy luận kiểu dữ liệu (type inference)
 - Giảm 90% boilerplate code
 - Dễ dàng kết hợp với method references
 - Hỗ trợ lập trình hàm hiệu quả
 
-### 1.3 Trường hợp vẫn cần anonymous classes
+### Trường hợp vẫn cần anonymous classes
 
 1. Khi làm việc với abstract class
 2. Interface có nhiều phương thức trừu tượng
 3. Cần truy cập instance của chính đối tượng (this)
 4. Yêu cầu serialization (lambda và anonymous class đều hạn chế serialization)
 
-### 1.4 Lưu ý quan trọng
+### Lưu ý quan trọng
 
 > **Luôn giữ lambda ngắn gọn** - 3 dòng code là giới hạn lý tưởng cho một biểu thức lambda. Nếu logic phức tạp, hãy tách thành phương thức riêng.
 {: .prompt-warning }
@@ -58,7 +58,7 @@ words.sort(comparingInt(String::length));
 - Sử dụng generic types đầy đủ để hỗ trợ type inference
 - Với các thao tác phức tạp, vẫn ưu tiên dùng class truyền thống
 
-### 1.5 Ứng dụng lambda trong enum
+### Ứng dụng lambda trong enum
 
 Lambda cho phép đơn giản hóa các enum có hành vi đặc thù. So sánh 2 cách triển khai enum Operation:
 
@@ -97,7 +97,7 @@ public enum Operation {
 - Tập trung logic vào nơi khai báo hằng số
 - Dễ dàng thêm/hủy các phép toán mới
 
-### 1.6 Giới hạn khi dùng lambda trong enum
+### Giới hạn khi dùng lambda trong enum
 
 ```java
 // Không thể truy cập instance members từ lambda trong constructor
@@ -110,7 +110,7 @@ Operation(String symbol, DoubleBinaryOperator op) {
 ## 2. Ưu tiên sử dụng method references thay cho lambdas
 > Khi lambda chỉ gọi một phương thức đã tồn tại, method reference giúp mã nguồn súc tích và biểu đạt rõ ý định hơn. Cú pháp `Class::method` loại bỏ boilerplate code trong khi vẫn giữ nguyên chức năng.
 
-### 2.1 Ví dụ điển hình
+### Ví dụ điển hình
 
 **Ví dụ điển hình với Map.merge:**
 ```java
@@ -121,7 +121,7 @@ map.merge(key, 1, (count, incr) -> count + incr);
 map.merge(key, 1, Integer::sum);
 ```
 
-### 2.2 Phân loại method reference
+### Phân loại method reference
 Ưu tiên method references khi ngắn gọn và rõ ràng, nhưng vẫn sử dụng lambda khi cần thiết. Phần tóm tắt bảng so sánh sẽ củng cố điều này, giúp bạn có cái nhìn tổng quan và đưa ra quyết định phù hợp.
 
 | Loại                  | Ví dụ                   | Tương đương lambda         | Ứng dụng điển hình       |
@@ -132,7 +132,7 @@ map.merge(key, 1, Integer::sum);
 | Class constructor     | `TreeMap::new`          | `() -> new TreeMap<>()`       | Tạo đối tượng factory    |
 | Array constructor     | `int[]::new`            | `len -> new int[len]`         | Tạo mảng động            |
 
-### 2.3 Giải thích chi tiết từng loại
+### Giải thích chi tiết từng loại
 
 1. **Static method reference**  
    Dùng khi gọi phương thức static của class  
@@ -173,14 +173,14 @@ map.merge(key, 1, Integer::sum);
    int[] numbers = arrayCreator.apply(5);
    ```
 
-### 2.4 Nguyên tắc áp dụng
+### Nguyên tắc áp dụng
 - Ưu tiên method reference khi làm mã sạch và dễ hiểu hơn
 - Vẫn dùng lambda nếu:
     - Cần mô tả logic phức tạp
     - Tham số lambda cung cấp tên biến có ý nghĩa
     - Method reference cùng class dài dòng (`GoshThisClassNameIsHumongous::action` → `() -> action()`)
   
-### 2.5 Trường hợp đặc biệt
+### Trường hợp đặc biệt
 
 ```java
 // Tránh dùng Function.identity()
@@ -190,7 +190,7 @@ Stream.of(values).map(x -> x)...
 Stream.of(values).map(Function.identity())...
 ```
 
-### 2.6 Lưu ý khi refactor
+### Lưu ý khi refactor
 - IDE thường gợi ý chuyển lambda → method reference, nhưng cần kiểm tra tính rõ ràng
 - Với logic phức tạp, tách thành phương thức riêng và dùng method reference
 - Ưu tiên cách viết nào tự nhiên và dễ đọc hơn
@@ -199,7 +199,7 @@ Stream.of(values).map(Function.identity())...
 
 ## 3. Ưu tiên sử dụng functional interface chuẩn
 
-### 3.1 Ví dụ điển hình
+### Ví dụ điển hình
 
 Khi thiết kế API nhận function object, hãy ưu tiên các interface có sẵn trong `java.util.function`. Ví dụ điển hình với LinkedHashMap:
 
@@ -213,7 +213,7 @@ protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
 BiPredicate<Map<K,V>, Map.Entry<K,V>> removalPredicate = (map, entry) -> map.size() > 100;
 ```
 
-### 3.2 Lý do sử dụng interface chuẩn
+### Lý do sử dụng interface chuẩn
 
 **Kiến thức nền tảng** - Hiểu rõ 6 functional interface cốt lõi trong package `java.util.function` là chìa khóa để viết code Java 8 hiệu quả.
 
@@ -221,7 +221,7 @@ BiPredicate<Map<K,V>, Map.Entry<K,V>> removalPredicate = (map, entry) -> map.siz
 2. Tận dụng các phương thức mặc định (ví dụ: `and()`, `or()` trong Predicate)
 3. Dễ dàng kết hợp với các API khác
 
-### 3.3 6 functional interface cốt lõi
+### 6 functional interface cốt lõi
 
 **6 functional interface cốt lõi:**
 
@@ -234,7 +234,7 @@ BiPredicate<Map<K,V>, Map.Entry<K,V>> removalPredicate = (map, entry) -> map.siz
 | `UnaryOperator<T>` | apply(T) → T    | String::toLowerCase    | Thao tác trên 1 toán hạng |
 | `BinaryOperator<T>`| apply(T,T) → T  | BigInteger::add        | Thao tác trên 2 toán hạng |
 
-### 3.4 Biến thể cho primitive types
+### Biến thể cho primitive types
 
 - Tránh boxing/unboxing với `IntPredicate`, `LongConsumer`,...
 - Ví dụ hiệu năng cao:
@@ -243,13 +243,13 @@ IntPredicate evenNumber = n -> n % 2 == 0; // Tốt hơn Predicate<Integer>
 DoubleFunction<String> converter = d -> String.format("%.2f", d); 
 ```
 
-### 3.5 Lưu ý khi thiết kế API
+### Lưu ý khi thiết kế API
 
 - Đừng tự tạo interface mới nếu đã có sẵn
 - Với tham số double/ int/ long, ưu tiên dùng primitive variants
 - Khi cần 2 tham số, dùng `BiPredicate`, `BiFunction` thay vì tự định nghĩa
 
-### 3.6 Khi nào cần tự tạo functional interface
+### Khi nào cần tự tạo functional interface
 
 1. Khi cần đặt tên có ý nghĩa nghiệp vụ (ví dụ: `Comparator` thay vì `ToIntBiFunction`)
 2. Khi cần thêm các phương thức mặc định đặc thù
@@ -257,7 +257,7 @@ DoubleFunction<String> converter = d -> String.format("%.2f", d);
 4. Khi cần xử lý exception checked
 5. Khi cần tham số đặc biệt (ví dụ: 3 tham số)
 
-### 3.7 Ví dụ interface tùy chỉnh
+### Ví dụ interface tùy chỉnh
 
 ```java
 @FunctionalInterface
@@ -270,14 +270,14 @@ public interface TriPredicate<T, U, V> {
 }
 ```
 
-### 3.8 Nguyên tắc thiết kế
+### Nguyên tắc thiết kế
 
 - Luôn đánh dấu bằng `@FunctionalInterface`
 - Tránh overload method nhận các functional interface khác nhau ở cùng vị trí tham số
 - Ưu tiên primitive functional interfaces (`IntPredicate`) thay vì dùng boxed types (`Predicate<Integer>`)
 - Đặt tên theo mẫu `<Hậu tố>Function` (ví dụ: `ToIntBiFunction`)
 
-### 3.9 Cảnh báo hiệu năng
+### Cảnh báo hiệu năng
 
 > ⚠️ **Cảnh báo Boxing/Unboxing** - Sử dụng sai kiểu primitive functional interface có thể gây tốn kém hiệu năng do autoboxing.
 {: .prompt-danger }
@@ -290,7 +290,7 @@ Predicate<Integer> evenPredicate = n -> n % 2 == 0; // Boxing
 IntPredicate evenIntPredicate = n -> n % 2 == 0; // Không boxing
 ```
 
-### 3.10 Xử lý exception
+### Xử lý exception
 
 ```java
 @FunctionalInterface
@@ -311,7 +311,7 @@ public interface ThrowingFunction<T, R> {
 
 ## 4. Sử dụng Streams API một cách hợp lý
 
-### 4.1 Khi nào nên dùng Streams
+### Khi nào nên dùng Streams
 
 Streams API cung cấp một cách mạnh mẽ để xử lý các tập hợp dữ liệu. Tuy nhiên, sử dụng streams quá mức có thể gây khó hiểu và phức tạp không cần thiết. Bạn nên sử dụng streams khi chúng giúp mã ngắn gọn và dễ đọc hơn, nhưng không nên lạm dụng chúng cho các trường hợp đơn giản mà một vòng lặp for thông thường sẽ dễ hiểu hơn.
 
@@ -321,7 +321,7 @@ Streams API cung cấp một cách mạnh mẽ để xử lý các tập hợp d
 - Tận dụng lazy evaluation và parallel processing
 - Kết hợp các thao tác phức tạp thành pipeline rõ ràng
 
-### 4.2 Ví dụ điển hình
+### Ví dụ điển hình
 
 ```java
 // Tìm 20 số nguyên tố Mersenne đầu tiên
@@ -331,14 +331,14 @@ primes().map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
         .forEach(System.out::println);
 ```
 
-### 4.3 Khi nên tránh Streams
+### Khi nên tránh Streams
 
 - Cần truy cập nhiều biến trung gian trong pipeline
 - Xử lý char/byte (do Java không hỗ trợ CharStream)
 - Cần sử dụng break/continue/return trong logic
 - Thao tác I/O phức tạp hoặc xử lý exception checked
 
-### 4.4 Nguyên tắc vàng
+### Nguyên tắc vàng
 
 1. Giữ stream pipeline ngắn gọn và tập trung
 2. Tách logic phức tạp thành các helper method
@@ -346,7 +346,7 @@ primes().map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
 4. Kết hợp với code truyền thống khi cần thiết
 5. Tránh nested stream (flatMap chỉ khi thực sự cần)
 
-### 4.5 Ví dụ kết hợp stream và code thường
+### Ví dụ kết hợp stream và code thường
 
 ```java
 // Đếm các nhóm anagram
@@ -358,13 +358,13 @@ try (Stream<String> words = Files.lines(dictionary)) {
 }
 ```
 
-### 4.6 Cảnh báo hiệu năng
+### Cảnh báo hiệu năng
 
 - Parallel stream chỉ hiệu quả với dữ liệu lớn (hàng triệu phần tử)
 - Tránh dùng boxed types trong stream (ưu tiên IntStream, LongStream)
 - Đo lường hiệu năng trước khi tối ưu
 
-### 4.7 Xử lý Cartesian Product
+### Xử lý Cartesian Product
 
 ```java
 // Cách tiếp cận truyền thống
@@ -380,7 +380,7 @@ List<Card> deck = Stream.of(Suit.values())
                         .collect(toList());
 ```
 
-### 4.8 Best Practices
+### Best Practices
 
 - Ưu tiên readability hơn cleverness
 - Comment giải thích các thao tác phức tạp
@@ -389,7 +389,7 @@ List<Card> deck = Stream.of(Suit.values())
 
 ## 5. Ưu tiên các hàm không gây tác dụng phụ trong streams
 
-### 5.1 Ví dụ điển hình về anti-pattern
+### Ví dụ điển hình về anti-pattern
 ```java
 // Cách tiếp cận sai: Sử dụng forEach để thay đổi state bên ngoài
 Map<String, Long> freq = new HashMap<>();
@@ -403,7 +403,7 @@ words.forEach(word -> {
 - Code khó theo dõi
 - Vi phạm nguyên tắc immutable trong stream
 
-### 5.2 Cách tiếp cận đúng với Collector
+### Cách tiếp cận đúng với Collector
 ```java
 // Sử dụng groupingBy + counting collector
 Map<String, Long> freq = words.collect(
@@ -416,7 +416,7 @@ Map<String, Long> freq = words.collect(
 - Code ngắn gọn và biểu đạt rõ ý định
 - Dễ dàng tối ưu hiệu năng
 
-### 5.3 5 Collector quan trọng cần nắm
+### 5 Collector quan trọng cần nắm
 1. **toList()/toSet()** - Thu thập phần tử vào collection
 ```java
 List<String> topNames = filteredStream.collect(toList());
@@ -449,7 +449,7 @@ Map<City, Set<String>> namesByCity = people.collect(
 );
 ```
 
-### 5.4 Xử lý collision trong toMap
+### Xử lý collision trong toMap
 ```java
 // Merge function khi key trùng
 Map<Artist, Album> topHits = albums.collect(
@@ -460,7 +460,7 @@ Map<Artist, Album> topHits = albums.collect(
 );
 ```
 
-### 5.5 Khi nào được phép dùng forEach
+### Khi nào được phép dùng forEach
 - Chỉ để consume kết quả cuối cùng
 - Không thực hiện tính toán/phụ thuộc vào thứ tự
 
@@ -482,7 +482,7 @@ orders.forEach(order -> processPayment(order));
 
 **Nguyên tắc cốt lõi:** Khi thiết kế API trả về chuỗi phần tử, cần hỗ trợ cả 2 trường hợp sử dụng: xử lý stream và vòng lặp for-each.
 
-### 6.1 Ví dụ anti-pattern
+### Ví dụ anti-pattern
 ```java
 // API chỉ trả về Stream
 public Stream<ProcessHandle> getAllProcesses() {
@@ -501,7 +501,7 @@ for (ProcessHandle ph : (Iterable<ProcessHandle>)
 - Giảm hiệu năng khi ép kiểu
 - Khó kết hợp với code cũ
 
-### 6.2 Pattern đúng: Trả về Collection
+### Pattern đúng: Trả về Collection
 ```java
 public Collection<ProcessHandle> getAllProcesses() {
     return new ArrayList<>(ProcessHandle.allProcesses().collect(toList()));
@@ -518,7 +518,7 @@ for (ProcessHandle ph : getAllProcesses()) {
 - Cho phép sử dụng cả stream và for-each
 - Dễ dàng mở rộng
 
-### 6.3 Các trường hợp đặc biệt
+### Các trường hợp đặc biệt
 **1. Dữ liệu lớn không lưu trữ được:**
 
 ```java
@@ -544,7 +544,7 @@ public class PowerSet {
 }
 ```
 
-### 6.4 Best Practices
+### Best Practices
 
 | Trường hợp               | Kiểu trả về ưu tiên  | Lý do                     |
 |--------------------------|----------------------|---------------------------|
@@ -598,7 +598,7 @@ public class SubLists {
 - Kết quả không chính xác
 - Treo hệ thống (liveness failure)
 
-### 7.1 Ví dụ anti-pattern
+### Ví dụ anti-pattern
 ```java
 // Parallel stream gây treo hệ thống
 public class MersennePrimes {
@@ -620,7 +620,7 @@ public class MersennePrimes {
 - Không in kết quả, CPU tăng 90% vô thời hạn
 - Nguyên nhân: Stream.iterate + limit khó chia nhỏ tác vụ
 
-### 7.2 Pattern đúng khi dùng parallel
+### Pattern đúng khi dùng parallel
 
 ```java
 // Ví dụ tính số nguyên tố <= n với parallel hiệu quả
@@ -639,7 +639,7 @@ public class PrimeCounter {
 - Tốc độ tăng ~3.7 lần trên CPU 4 nhân
 - Nguyên nhân: Dữ liệu nguồn (LongStream.range) dễ chia nhỏ
 
-### 7.3 Các yếu tố ảnh hưởng đến hiệu quả
+### Các yếu tố ảnh hưởng đến hiệu quả
 
 | Yếu tố                  | Tốt cho parallel | Ví dụ                  |
 |-------------------------|------------------|------------------------|
@@ -649,7 +649,7 @@ public class PrimeCounter {
 | Kích thước dữ liệu      | Lớn (>100k)     | List với 1 triệu phần tử |
 | Độ phức tạp tính toán   | Cao             | Xử lý ảnh, mã hóa dữ liệu |
 
-### 7.4 Best practices
+### Best practices
 **Chọn nguồn dữ liệu phù hợp:**
 
 ```java
