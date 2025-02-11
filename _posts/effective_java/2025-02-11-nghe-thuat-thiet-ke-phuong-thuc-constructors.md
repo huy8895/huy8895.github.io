@@ -442,7 +442,7 @@ public void sort(List<?> list) {
 - Khi chỉ một phần dữ liệu được sử dụng thực tế
 - Khi làm việc với luồng dữ liệu stream/iterator
 
-> 💡 Ví dụ thực tế: Giống như việc kiểm tra chất lượng nông sản - thay vì kiểm tra toàn bộ kho hàng (tốn thời gian), chỉ kiểm tra từng lô hàng khi xuất kho (tiết kiệm chi phí).
+> 💡 Giống như việc kiểm tra chất lượng nông sản - thay vì kiểm tra toàn bộ kho hàng (tốn thời gian), chỉ kiểm tra từng lô hàng khi xuất kho (tiết kiệm chi phí).
 {: .prompt-tip}
 
 
