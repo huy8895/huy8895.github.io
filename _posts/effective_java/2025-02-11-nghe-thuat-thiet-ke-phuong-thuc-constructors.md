@@ -314,7 +314,7 @@ Thermometer.newInstance(TemperatureScale.CELSIUS); // Rõ ràng, dễ hiểu
 ### Best practices
 **Giảm số lượng tham số**:
 
-```java:example/ListExample.java
+```java
 // Thay vì phương thức 3 tham số
 list.findFirstIndex(element, start, end);
 
