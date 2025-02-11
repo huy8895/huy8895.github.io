@@ -15,6 +15,7 @@ Java 8 đã mang đến những cải tiến lớn trong lập trình với các
 ## 1. Ưu tiên sử dụng lambdas thay vì anonymous classes
 
 Trước Java 8, các interface với một phương thức trừu tượng (SAM) thường được triển khai thông qua anonymous classes. Cách tiếp cận này tạo ra nhiều boilerplate code và khó đọc. Lambda expressions ra đời giúp giải quyết những vấn đề này bằng cú pháp ngắn gọn và biểu cảm hơn.
+### 1.1 Ví dụ so sánh
 
 Ví dụ so sánh khi sắp xếp danh sách:
 ```java
@@ -33,11 +34,15 @@ Collections.sort(words,
 words.sort(comparingInt(String::length));
 ```
 
+### 1.2 Ưu điểm chính
+
 Ưu điểm chính của lambdas:
 - Tự động suy luận kiểu dữ liệu (type inference)
 - Giảm 90% boilerplate code
 - Dễ dàng kết hợp với method references
 - Hỗ trợ lập trình hàm hiệu quả
+
+### 1.3 Trường hợp vẫn cần anonymous classes
 
 **Trường hợp vẫn cần dùng anonymous classes:**
 1. Khi làm việc với abstract class
@@ -45,10 +50,14 @@ words.sort(comparingInt(String::length));
 3. Cần truy cập instance của chính đối tượng (this)
 4. Yêu cầu serialization (lambda và anonymous class đều hạn chế serialization)
 
+### 1.4 Lưu ý quan trọng
+
 **Lưu ý quan trọng:**
 - Giữ lambda ngắn gọn (tối ưu trong 1-3 dòng)
 - Sử dụng generic types đầy đủ để hỗ trợ type inference
 - Với các thao tác phức tạp, vẫn ưu tiên dùng class truyền thống
+
+### 1.5 Ứng dụng lambda trong enum
 
 **Ứng dụng lambda trong enum:**
 Lambda cho phép đơn giản hóa các enum có hành vi đặc thù. So sánh 2 cách triển khai enum Operation:
@@ -88,7 +97,8 @@ public enum Operation {
 - Tập trung logic vào nơi khai báo hằng số
 - Dễ dàng thêm/hủy các phép toán mới
 
-**Giới hạn khi dùng lambda trong enum:**
+### 1.6 Giới hạn khi dùng lambda trong enum
+
 ```java
 // Không thể truy cập instance members từ lambda trong constructor
 Operation(String symbol, DoubleBinaryOperator op) {
