@@ -376,7 +376,7 @@ Trigger trigger = TriggerBuilder.newTrigger()
   .build();
 ```
 
-#### 2.3.5 Tạo mới job dạng cron
+#### 2.3.4 Tạo mới job dạng cron
 
 Để tiếp tục 1 job:
 
