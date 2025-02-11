@@ -340,7 +340,7 @@ public void playCard(Card card) { ... }
 ```
 
 
-3. **Áp dụng Builder pattern**:
+**Áp dụng Builder pattern**:
 
 ```java:example/Configuration.java
 public class ConfigBuilder {
