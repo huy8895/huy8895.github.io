@@ -30,7 +30,7 @@ public void processData(String input) {
 }
 ```
 > Lỗi xảy ra muộn, khó truy vết nguồn gốc, có thể làm hỏng trạng thái hệ thống
-{: .prompt-warn}
+{: .prompt-warning}
 
 #### Pattern đúng: Kiểm tra đầu vào
 
