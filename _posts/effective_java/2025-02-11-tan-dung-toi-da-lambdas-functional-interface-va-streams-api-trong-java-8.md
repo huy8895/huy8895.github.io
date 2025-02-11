@@ -221,7 +221,7 @@ BiPredicate<Map<K,V>, Map.Entry<K,V>> removalPredicate = (map, entry) -> map.siz
 2. Tận dụng các phương thức mặc định (ví dụ: `and()`, `or()` trong Predicate)
 3. Dễ dàng kết hợp với các API khác
 
-### 6 functional interface cốt lõi
+### functional interface cốt lõi
 
 **6 functional interface cốt lõi:**
 
