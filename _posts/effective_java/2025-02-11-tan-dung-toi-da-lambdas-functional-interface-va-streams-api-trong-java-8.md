@@ -307,6 +307,8 @@ public interface ThrowingFunction<T, R> {
 
 ## 4. Sử dụng Streams API một cách hợp lý
 
+### 4.1 Khi nào nên dùng Streams
+
 Streams API cung cấp một cách mạnh mẽ để xử lý các tập hợp dữ liệu. Tuy nhiên, sử dụng streams quá mức có thể gây khó hiểu và phức tạp không cần thiết. Bạn nên sử dụng streams khi chúng giúp mã ngắn gọn và dễ đọc hơn, nhưng không nên lạm dụng chúng cho các trường hợp đơn giản mà một vòng lặp for thông thường sẽ dễ hiểu hơn.
 
 **Khi nào nên dùng Streams:**
@@ -315,7 +317,8 @@ Streams API cung cấp một cách mạnh mẽ để xử lý các tập hợp d
 - Tận dụng lazy evaluation và parallel processing
 - Kết hợp các thao tác phức tạp thành pipeline rõ ràng
 
-**Ví dụ điển hình:**
+### 4.2 Ví dụ điển hình
+
 ```java
 // Tìm 20 số nguyên tố Mersenne đầu tiên
 primes().map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
@@ -324,20 +327,23 @@ primes().map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
         .forEach(System.out::println);
 ```
 
-**Khi nên tránh Streams:**
+### 4.3 Khi nên tránh Streams
+
 - Cần truy cập nhiều biến trung gian trong pipeline
 - Xử lý char/byte (do Java không hỗ trợ CharStream)
 - Cần sử dụng break/continue/return trong logic
 - Thao tác I/O phức tạp hoặc xử lý exception checked
 
-**Nguyên tắc vàng:**
+### 4.4 Nguyên tắc vàng
+
 1. Giữ stream pipeline ngắn gọn và tập trung
 2. Tách logic phức tạp thành các helper method
 3. Đặt tên biến stream có ý nghĩa (ví dụ: `words`, `primes`)
 4. Kết hợp với code truyền thống khi cần thiết
 5. Tránh nested stream (flatMap chỉ khi thực sự cần)
 
-**Ví dụ kết hợp stream và code thường:**
+### 4.5 Ví dụ kết hợp stream và code thường
+
 ```java
 // Đếm các nhóm anagram
 try (Stream<String> words = Files.lines(dictionary)) {
@@ -348,12 +354,14 @@ try (Stream<String> words = Files.lines(dictionary)) {
 }
 ```
 
-**Cảnh báo hiệu năng:**
+### 4.6 Cảnh báo hiệu năng
+
 - Parallel stream chỉ hiệu quả với dữ liệu lớn (hàng triệu phần tử)
 - Tránh dùng boxed types trong stream (ưu tiên IntStream, LongStream)
 - Đo lường hiệu năng trước khi tối ưu
 
-**Xử lý Cartesian Product:**
+### 4.7 Xử lý Cartesian Product
+
 ```java
 // Cách tiếp cận truyền thống
 List<Card> deck = new ArrayList<>();
@@ -368,7 +376,8 @@ List<Card> deck = Stream.of(Suit.values())
                         .collect(toList());
 ```
 
-**Best Practices:**
+### 4.8 Best Practices
+
 - Ưu tiên readability hơn cleverness
 - Comment giải thích các thao tác phức tạp
 - Refactor code thường xuyên để cân bằng giữa stream và loop
