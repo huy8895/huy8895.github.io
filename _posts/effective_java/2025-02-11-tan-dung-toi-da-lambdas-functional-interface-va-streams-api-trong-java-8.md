@@ -199,6 +199,8 @@ Stream.of(values).map(Function.identity())...
 
 ## 3. Ưu tiên sử dụng functional interface chuẩn
 
+### 3.1 Ví dụ điển hình
+
 Khi thiết kế API nhận function object, hãy ưu tiên các interface có sẵn trong `java.util.function`. Ví dụ điển hình với LinkedHashMap:
 
 ```java
@@ -211,10 +213,14 @@ protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
 BiPredicate<Map<K,V>, Map.Entry<K,V>> removalPredicate = (map, entry) -> map.size() > 100;
 ```
 
+### 3.2 Lý do sử dụng interface chuẩn
+
 **Lý do nên dùng interface chuẩn:**
 1. Giảm số lượng interface cần học
 2. Tận dụng các phương thức mặc định (ví dụ: `and()`, `or()` trong Predicate)
 3. Dễ dàng kết hợp với các API khác
+
+### 3.3 6 functional interface cốt lõi
 
 **6 functional interface cốt lõi:**
 
@@ -227,7 +233,8 @@ BiPredicate<Map<K,V>, Map.Entry<K,V>> removalPredicate = (map, entry) -> map.siz
 | `UnaryOperator<T>` | apply(T) → T    | String::toLowerCase    | Thao tác trên 1 toán hạng |
 | `BinaryOperator<T>`| apply(T,T) → T  | BigInteger::add        | Thao tác trên 2 toán hạng |
 
-**Biến thể cho primitive types:**
+### 3.4 Biến thể cho primitive types
+
 - Tránh boxing/unboxing với `IntPredicate`, `LongConsumer`,...
 - Ví dụ hiệu năng cao:
 ```java
@@ -235,19 +242,22 @@ IntPredicate evenNumber = n -> n % 2 == 0; // Tốt hơn Predicate<Integer>
 DoubleFunction<String> converter = d -> String.format("%.2f", d); 
 ```
 
-**Lưu ý khi thiết kế API:**
+### 3.5 Lưu ý khi thiết kế API
+
 - Đừng tự tạo interface mới nếu đã có sẵn
 - Với tham số double/ int/ long, ưu tiên dùng primitive variants
 - Khi cần 2 tham số, dùng `BiPredicate`, `BiFunction` thay vì tự định nghĩa
 
-**Khi nào cần tự tạo functional interface?**
+### 3.6 Khi nào cần tự tạo functional interface
+
 1. Khi cần đặt tên có ý nghĩa nghiệp vụ (ví dụ: `Comparator` thay vì `ToIntBiFunction`)
 2. Khi cần thêm các phương thức mặc định đặc thù
 3. Khi có các ràng buộc contract nghiêm ngặt
 4. Khi cần xử lý exception checked
 5. Khi cần tham số đặc biệt (ví dụ: 3 tham số)
 
-**Ví dụ interface tùy chỉnh:**
+### 3.7 Ví dụ interface tùy chỉnh
+
 ```java
 @FunctionalInterface
 public interface TriPredicate<T, U, V> {
@@ -259,13 +269,15 @@ public interface TriPredicate<T, U, V> {
 }
 ```
 
-**Nguyên tắc thiết kế:**
+### 3.8 Nguyên tắc thiết kế
+
 - Luôn đánh dấu bằng `@FunctionalInterface`
 - Tránh overload method nhận các functional interface khác nhau ở cùng vị trí tham số
 - Ưu tiên primitive functional interfaces (`IntPredicate`) thay vì dùng boxed types (`Predicate<Integer>`)
 - Đặt tên theo mẫu `<Hậu tố>Function` (ví dụ: `ToIntBiFunction`)
 
-**Cảnh báo hiệu năng:**
+### 3.9 Cảnh báo hiệu năng
+
 ```java
 // Tránh dùng
 Predicate<Integer> evenPredicate = n -> n % 2 == 0; // Boxing
@@ -274,7 +286,8 @@ Predicate<Integer> evenPredicate = n -> n % 2 == 0; // Boxing
 IntPredicate evenIntPredicate = n -> n % 2 == 0; // Không boxing
 ```
 
-**Xử lý exception:**
+### 3.10 Xử lý exception
+
 ```java
 @FunctionalInterface
 public interface ThrowingFunction<T, R> {
