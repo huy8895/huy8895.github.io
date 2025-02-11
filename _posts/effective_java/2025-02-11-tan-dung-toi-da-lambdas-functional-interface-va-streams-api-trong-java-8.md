@@ -710,3 +710,4 @@ random.ints(100_000).parallel().filter(i -> i % 2 == 0).count();
 ## 8. Kết luận
 
 Java 8 mang đến nhiều tính năng mới để cải thiện hiệu suất và độ dễ đọc của mã, nhưng việc sử dụng chúng một cách hiệu quả yêu cầu bạn phải hiểu rõ về lambdas, functional interface và Streams API. Bằng cách tuân theo các nguyên tắc trên, bạn có thể tận dụng tối đa những lợi ích mà chúng mang lại.
+
