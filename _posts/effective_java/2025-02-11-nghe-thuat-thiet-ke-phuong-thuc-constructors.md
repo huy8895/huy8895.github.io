@@ -14,7 +14,7 @@ mermaid: false
 
 ## 1. Luôn kiểm tra tham số đầu vào
 
-### Nguyên tắc cốt lõi
+### Nguyên tắc
 - **Phát hiện lỗi sớm**: Kiểm tra tham số ngay từ đầu method giúp phát hiện lỗi nhanh chóng và rõ ràng
 - **Bảo vệ tính toàn vẹn**: Ngăn chặn các lỗi tiềm ẩn ảnh hưởng đến trạng thái đối tượng
 - **Tài liệu hóa rõ ràng**: Mô tả chính xác các điều kiện đầu vào và ngoại lệ có thể xảy ra
@@ -29,7 +29,8 @@ public void processData(String input) {
     // ... xử lý tiếp ...
 }
 ```
-**Hậu quả**: Lỗi xảy ra muộn, khó truy vết nguồn gốc, có thể làm hỏng trạng thái hệ thống
+> Lỗi xảy ra muộn, khó truy vết nguồn gốc, có thể làm hỏng trạng thái hệ thống
+{: .prompt-warn}
 
 #### Pattern đúng: Kiểm tra đầu vào
 
@@ -41,7 +42,8 @@ public void processData(String input) {
     // ... xử lý an toàn ...
 }
 ```
-**Lợi ích**: Phát hiện lỗi ngay lập tức, thông báo rõ ràng về nguyên nhân
+> Phát hiện lỗi ngay lập tức, thông báo rõ ràng về nguyên nhân
+{: .prompt-tip}
 
 ### Công cụ hỗ trợ quan trọng
 
