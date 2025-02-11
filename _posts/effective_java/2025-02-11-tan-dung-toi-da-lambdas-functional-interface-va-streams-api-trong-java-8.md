@@ -227,6 +227,57 @@ DoubleFunction<String> converter = d -> String.format("%.2f", d);
 - Với tham số double/ int/ long, ưu tiên dùng primitive variants
 - Khi cần 2 tham số, dùng `BiPredicate`, `BiFunction` thay vì tự định nghĩa
 
+**Khi nào cần tự tạo functional interface?**
+1. Khi cần đặt tên có ý nghĩa nghiệp vụ (ví dụ: `Comparator` thay vì `ToIntBiFunction`)
+2. Khi cần thêm các phương thức mặc định đặc thù
+3. Khi có các ràng buộc contract nghiêm ngặt
+4. Khi cần xử lý exception checked
+5. Khi cần tham số đặc biệt (ví dụ: 3 tham số)
+
+**Ví dụ interface tùy chỉnh:**
+```java
+@FunctionalInterface
+public interface TriPredicate<T, U, V> {
+    boolean test(T t, U u, V v);
+    
+    default TriPredicate<T, U, V> and(TriPredicate<? super T, ? super U, ? super V> other) {
+        return (t, u, v) -> test(t, u, v) && other.test(t, u, v);
+    }
+}
+```
+
+**Nguyên tắc thiết kế:**
+- Luôn đánh dấu bằng `@FunctionalInterface`
+- Tránh overload method nhận các functional interface khác nhau ở cùng vị trí tham số
+- Ưu tiên primitive functional interfaces (`IntPredicate`) thay vì dùng boxed types (`Predicate<Integer>`)
+- Đặt tên theo mẫu `<Hậu tố>Function` (ví dụ: `ToIntBiFunction`)
+
+**Cảnh báo hiệu năng:**
+```java
+// Tránh dùng
+Predicate<Integer> evenPredicate = n -> n % 2 == 0; // Boxing
+
+// Nên dùng
+IntPredicate evenIntPredicate = n -> n % 2 == 0; // Không boxing
+```
+
+**Xử lý exception:**
+```java
+@FunctionalInterface
+public interface ThrowingFunction<T, R> {
+    R apply(T t) throws Exception;
+    
+    static <T, R> Function<T, R> wrap(ThrowingFunction<T, R> fn) {
+        return t -> {
+            try {
+                return fn.apply(t);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+}
+```
 ## Sử dụng Streams API một cách hợp lý
 
 Streams API cung cấp một cách mạnh mẽ để xử lý các tập hợp dữ liệu. Tuy nhiên, sử dụng streams quá mức có thể gây khó hiểu và phức tạp không cần thiết. Bạn nên sử dụng streams khi chúng giúp mã ngắn gọn và dễ đọc hơn, nhưng không nên lạm dụng chúng cho các trường hợp đơn giản mà một vòng lặp for thông thường sẽ dễ hiểu hơn.
