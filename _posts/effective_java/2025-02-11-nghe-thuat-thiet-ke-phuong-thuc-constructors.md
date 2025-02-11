@@ -324,7 +324,7 @@ list.subList(start, end).indexOf(element);
 
 
 **Nhóm tham số bằng helper class**:
-```java:example/CardGame.java
+```java
 public class Card {
     private final Rank rank;
     private final Suit suit;
@@ -342,7 +342,7 @@ public void playCard(Card card) { ... }
 
 **Áp dụng Builder pattern**:
 
-```java:example/Configuration.java
+```java
 public class ConfigBuilder {
     private String host;
     private int port = 80;
@@ -370,7 +370,7 @@ public class ConfigBuilder {
 
 ### Mẫu code chuẩn
 
-```java:example/APIDesign.java
+```java
 public class FileUploader {
     // Sử dụng interface thay vì class cụ thể
     public void upload(InputStream dataSource) { ... }
@@ -408,11 +408,11 @@ public class NetworkConfig {
 
 Để giải thích về kiểm tra tham số trì hoãn (Lazy Validation), chúng ta có thể trình bày như sau:
 
-### 🌟 Kiểm tra tham số trì hoãn (Lazy Validation)
+### Kiểm tra tham số trì hoãn (Lazy Validation)
 **Bản chất**: Thay vì kiểm tra toàn bộ tham số ngay khi method được gọi, chúng ta chỉ kiểm tra khi thực sự cần sử dụng giá trị đó
 
 **Ví dụ thực tế**:
-```java:example/Sorter.java
+```java
 public void sort(List<?> list) {
     // Không kiểm tra list ngay từ đầu
     for (int i = 0; i < list.size() - 1; i++) {
@@ -446,6 +446,7 @@ public void sort(List<?> list) {
 {: .prompt-tip}
 
 ## 4. Dùng Overloading đúng lúc
+
 
 ## 5. Cẩn trọng với tham số biến đổi (varargs)
 
