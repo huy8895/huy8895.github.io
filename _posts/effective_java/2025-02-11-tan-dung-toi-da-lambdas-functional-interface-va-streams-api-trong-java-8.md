@@ -2,7 +2,7 @@
 title: "Tận Dụng Tối Đa Lambdas, Functional Interface và Streams API trong Java 8"
 description: "Cách sử dụng hiệu quả các tính năng mới trong Java 8 bao gồm lambdas, functional interface và Streams API."
 author: huy8895
-date: 2025-03-10 08:00:00 +0700
+date: 2025-02-11 08:00:00 +0700
 categories: [Effective Java]
 tags: [java, "java 8", best-practices]
 pin: false
