@@ -671,8 +671,6 @@ random.ints(100_000).parallel().filter(i -> i % 2 == 0).count();
 - Không dùng `parallel()` cho I/O operations
 - Tránh dùng với các thao tác blocking
 - Test kỹ trên môi trường production-like
-
-### Kết luận
 - Parallel stream là con dao hai lưỡi
 - Chỉ sử dụng khi:
   - Dữ liệu đủ lớn (>100k phần tử)
