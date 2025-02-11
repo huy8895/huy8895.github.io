@@ -430,6 +430,7 @@ public void sort(List<?> list) {
 3. **Phù hợp với luồng xử lý** khi validation phụ thuộc vào ngữ cảnh sử dụng
 
 ### So sánh 2 cách tiếp cận
+
 | Tình huống                | Kiểm tra ngay | Kiểm tra trì hoãn |
 |---------------------------|--------------|-------------------|
 | List 1 triệu phần tử      | Mất 100ms     | 0ms               |
