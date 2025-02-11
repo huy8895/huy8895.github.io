@@ -273,7 +273,7 @@ public class SecureDataStore {
 - Hiệu năng là yếu tố sống còn và có cam kết không sửa đổi
 - Sử dụng các cơ chế bất biến từ ngôn ngữ (như record trong Java 16+)
 
-## Thiết kế phương thức khoa học
+## 3. Thiết kế phương thức khoa học
 
 ### Nguyên tắc cốt lõi
 - **Đặt tên phương thức rõ ràng**: Tuân thủ quy ước đặt tên, dễ hiểu và nhất quán
