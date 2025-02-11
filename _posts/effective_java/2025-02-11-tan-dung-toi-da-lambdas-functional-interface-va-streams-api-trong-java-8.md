@@ -121,34 +121,53 @@ map.merge(key, 1, Integer::sum);
 | Class constructor     | `TreeMap::new`          | `() -> new TreeMap<>()`       | Tạo đối tượng factory    |
 | Array constructor     | `int[]::new`            | `len -> new int[len]`         | Tạo mảng động            |
 
-**Giải thích:**
-1. Bound reference: Đối tượng receiver được xác định trước
+**Giải thích chi tiết từng loại:**
+
+1. **Static method reference**  
+   Dùng khi gọi phương thức static của class  
    ```java
-   // Filter các thời điểm sau thời điểm hiện tại
-   List<Instant> futureTimes = times.stream()
-       .filter(Instant.now()::isAfter)
+   List<Integer> numbers = Arrays.asList("1", "2", "3").stream()
+       .map(Integer::parseInt)  // Tương đương s -> Integer.parseInt(s)
        .collect(Collectors.toList());
    ```
 
-2. Unbound reference: Đối tượng receiver được truyền qua tham số
+2. **Bound instance method reference**  
+   Đối tượng được xác định trước khi gọi phương thức  
    ```java
-   // Chuẩn hóa danh sách email
-   List<String> emails = rawInputs.stream()
-       .map(String::toLowerCase)
+   Instant cutoff = Instant.now();
+   List<Instant> pastEvents = events.stream()
+       .filter(cutoff::isAfter)  // event -> cutoff.isAfter(event)
        .collect(Collectors.toList());
    ```
 
-3. Constructor reference: Thay thế factory pattern
+3. **Unbound instance method reference**  
+   Đối tượng được truyền như tham số đầu tiên  
    ```java
-   Supplier<List<String>> listFactory = ArrayList::new;
+   List<String> upperNames = names.stream()
+       .map(String::toUpperCase)  // name -> name.toUpperCase()
+       .collect(Collectors.toList());
+   ```
+
+4. **Class constructor reference**  
+   Thay thế Supplier để tạo đối tượng  
+   ```java
+   Supplier<List<String>> listMaker = ArrayList::new;  // () -> new ArrayList<>()
+   List<String> tempList = listMaker.get();
+   ```
+
+5. **Array constructor reference**  
+   Tạo mảng với kích thước động  
+   ```java
+   IntFunction<int[]> arrayCreator = int[]::new;  // size -> new int[size]
+   int[] numbers = arrayCreator.apply(5);
    ```
 
 **Nguyên tắc áp dụng:**
 - Ưu tiên method reference khi làm mã sạch và dễ hiểu hơn
 - Vẫn dùng lambda nếu:
-  - Cần mô tả logic phức tạp
-  - Tham số lambda cung cấp tên biến có ý nghĩa
-  - Method reference cùng class dài dòng (`GoshThisClassNameIsHumongous::action` → `() -> action()`)
+- Cần mô tả logic phức tạp
+- Tham số lambda cung cấp tên biến có ý nghĩa
+- Method reference cùng class dài dòng (`GoshThisClassNameIsHumongous::action` → `() -> action()`)
   
 **Trường hợp đặc biệt:**
 ```java
