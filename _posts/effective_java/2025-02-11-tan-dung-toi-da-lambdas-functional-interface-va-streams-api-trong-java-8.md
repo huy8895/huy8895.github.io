@@ -282,21 +282,70 @@ public interface ThrowingFunction<T, R> {
 
 Streams API cung cấp một cách mạnh mẽ để xử lý các tập hợp dữ liệu. Tuy nhiên, sử dụng streams quá mức có thể gây khó hiểu và phức tạp không cần thiết. Bạn nên sử dụng streams khi chúng giúp mã ngắn gọn và dễ đọc hơn, nhưng không nên lạm dụng chúng cho các trường hợp đơn giản mà một vòng lặp for thông thường sẽ dễ hiểu hơn.
 
-Ví dụ:
+**Khi nào nên dùng Streams:**
+- Xử lý chuỗi phép biến đổi dữ liệu tuần tự (map, filter, reduce)
+- Thao tác trên tập dữ liệu lớn hoặc vô hạn
+- Tận dụng lazy evaluation và parallel processing
+- Kết hợp các thao tác phức tạp thành pipeline rõ ràng
 
+**Ví dụ điển hình:**
 ```java
-// Sử dụng hợp lý
-List<String> filteredList = list.stream()
-                                .filter(item -> !item.isEmpty())
-                                .collect(Collectors.toList());
+// Tìm 20 số nguyên tố Mersenne đầu tiên
+primes().map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
+        .filter(mersenne -> mersenne.isProbablePrime(50))
+        .limit(20)
+        .forEach(System.out::println);
+```
 
-// Không cần thiết
-for (String item : list) {
-    if (!item.isEmpty()) {
-        filteredList.add(item);
-    }
+**Khi nên tránh Streams:**
+- Cần truy cập nhiều biến trung gian trong pipeline
+- Xử lý char/byte (do Java không hỗ trợ CharStream)
+- Cần sử dụng break/continue/return trong logic
+- Thao tác I/O phức tạp hoặc xử lý exception checked
+
+**Nguyên tắc vàng:**
+1. Giữ stream pipeline ngắn gọn và tập trung
+2. Tách logic phức tạp thành các helper method
+3. Đặt tên biến stream có ý nghĩa (ví dụ: `words`, `primes`)
+4. Kết hợp với code truyền thống khi cần thiết
+5. Tránh nested stream (flatMap chỉ khi thực sự cần)
+
+**Ví dụ kết hợp stream và code thường:**
+```java
+// Đếm các nhóm anagram
+try (Stream<String> words = Files.lines(dictionary)) {
+    words.collect(groupingBy(word -> alphabetize(word)))
+         .values().stream()
+         .filter(group -> group.size() >= minGroupSize)
+         .forEach(g -> System.out.println(g.size() + ": " + g));
 }
 ```
+
+**Cảnh báo hiệu năng:**
+- Parallel stream chỉ hiệu quả với dữ liệu lớn (hàng triệu phần tử)
+- Tránh dùng boxed types trong stream (ưu tiên IntStream, LongStream)
+- Đo lường hiệu năng trước khi tối ưu
+
+**Xử lý Cartesian Product:**
+```java
+// Cách tiếp cận truyền thống
+List<Card> deck = new ArrayList<>();
+for (Suit suit : Suit.values()) 
+    for (Rank rank : Rank.values()) 
+        deck.add(new Card(suit, rank));
+
+// Cách dùng stream (chỉ khi team đã quen)
+List<Card> deck = Stream.of(Suit.values())
+                        .flatMap(suit -> Stream.of(Rank.values())
+                                              .map(rank -> new Card(suit, rank)))
+                        .collect(toList());
+```
+
+**Best Practices:**
+- Ưu tiên readability hơn cleverness
+- Comment giải thích các thao tác phức tạp
+- Refactor code thường xuyên để cân bằng giữa stream và loop
+- Test cả hai phiên bản stream và non-stream để so sánh
 
 ## Ưu tiên các hàm không gây tác dụng phụ trong streams
 
