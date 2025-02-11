@@ -54,7 +54,7 @@ public void processData(String input) {
 | Assert                | Kiểm tra nội bộ                  | 1.4+           |
 
 ### Best practices
-1. **Document exceptions**:
+**Document exceptions**:
 
 ```java
 /**
@@ -66,7 +66,7 @@ public double divide(int dividend, int divisor) {
 }
 ```
 
-2. **Sử dụng annotation @Nullable**:
+**Sử dụng annotation @Nullable**:
 
 ```java
 public void updateProfile(@Nullable String nickname) {
@@ -74,12 +74,17 @@ public void updateProfile(@Nullable String nickname) {
 }
 ```
 
-3. **Kiểm tra tham số trì hoãn**:
+**Kiểm tra tham số trì hoãn** (Lazy Validation)
 
 ```java
-// Chỉ kiểm tra khi thực sự cần thiết
 public void sort(List<?> list) {
-    // Kiểm tra trong quá trình so sánh phần tử
+    // Không kiểm tra list ngay từ đầu
+    for (int i = 0; i < list.size() - 1; i++) {
+        // Kiểm tra khi thực sự so sánh 2 phần tử
+        if (list.get(i).compareTo(list.get(i+1)) > 0) {
+            // ... xử lý đổi chỗ ...
+        }
+    }
 }
 ```
 
@@ -152,7 +157,8 @@ public final class Period {
     public Date getEnd() { return end; }
 }
 ````
-**Hậu quả**: Dữ liệu có thể bị thay đổi từ bên ngoài thông qua tham chiếu Date
+> Dữ liệu có thể bị thay đổi từ bên ngoài thông qua tham chiếu Date
+{: .prompt-warning}
 
 #### Pattern đúng: Tạo bản sao phòng thủ
 
@@ -173,7 +179,8 @@ public final class SafePeriod {
     public Date getEnd() { return new Date(end.getTime()); }
 }
 ````
-**Lợi ích**: Đảm bảo tính bất biến thực sự, ngăn chặn mọi thay đổi từ bên ngoài
+> Đảm bảo tính bất biến thực sự, ngăn chặn mọi thay đổi từ bên ngoài
+{: .prompt-tip}
 
 ### Công cụ hỗ trợ chính
 
