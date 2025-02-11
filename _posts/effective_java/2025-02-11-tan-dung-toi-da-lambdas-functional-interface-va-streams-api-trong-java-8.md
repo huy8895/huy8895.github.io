@@ -527,6 +527,7 @@ public static <E> Iterable<E> iterableOf(Stream<E> stream) {
 ```
 
 **Ví dụ xử lý sublist:**
+
 ```java
 public class SubLists {
     public static <E> Stream<List<E>> of(List<E> list) {
@@ -601,6 +602,7 @@ public class PrimeCounter {
 - Nguyên nhân: Dữ liệu nguồn (LongStream.range) dễ chia nhỏ
 
 ### Các yếu tố ảnh hưởng đến hiệu quả
+
 | Yếu tố                  | Tốt cho parallel | Ví dụ                  |
 |-------------------------|------------------|------------------------|
 | Nguồn dữ liệu           | ArrayList, mảng  | new ArrayList().stream().parallel() |
@@ -611,6 +613,7 @@ public class PrimeCounter {
 
 ### Best practices
 1. **Chọn nguồn dữ liệu phù hợp:**
+
 ```java
 // Tốt: Mảng, ArrayList, HashMap
 int[] numbers = new int[10_000];
@@ -621,6 +624,7 @@ Stream.iterate(0, i -> i+1).parallel().limit(1000);
 ```
 
 2. **Tránh stateful operations:**
+
 ```java
 // Sai: Sử dụng biến ngoài trong parallel stream
 AtomicInteger count = new AtomicInteger();
@@ -631,6 +635,7 @@ long correctCount = list.parallelStream().count();
 ```
 
 3. **Chú ý thứ tự xử lý:**
+
 ```java
 // In kết quả không theo thứ tự
 list.parallelStream().forEach(System.out::println);
@@ -640,6 +645,7 @@ list.parallelStream().forEachOrdered(System.out::println);
 ```
 
 4. **Kiểm tra hiệu năng:**
+
 ```java
 // Đo thời gian trước/sau khi parallel
 long start = System.nanoTime();
@@ -653,6 +659,7 @@ if (durationParallel < durationSequential * 0.7) {
 ```
 
 5. **Sử dụng SplittableRandom:**
+
 ```java
 // Tạo số ngẫu nhiên cho parallel
 SplittableRandom random = new SplittableRandom();
