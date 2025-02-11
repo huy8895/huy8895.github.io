@@ -496,6 +496,7 @@ public static String classify(Collection<?> c) {
 **Giải pháp**: Kiểm tra kiểu thực tế bằng instanceof để xác định chính xác
 
 ### Các tình huống cần tránh
+
 | Tình huống                | Rủi ro                     | Giải pháp                   |
 |---------------------------|---------------------------|-----------------------------|
 | Autoboxing/Unboxing       | Nhầm lẫn kiểu nguyên thủy và wrapper | Sử dụng kiểu cụ thể |
@@ -503,15 +504,15 @@ public static String classify(Collection<?> c) {
 | Functional interface      | Nhầm lẫn lambda expression | Không overloading cùng vị trí tham số |
 
 ### Best practices
-1. **Đặt tên phương thức rõ ràng**:
-```java:example/OutputStreamExample.java
+**Đặt tên phương thức rõ ràng**:
+```java
 public void writeBoolean(boolean b) { ... }
 public void writeInt(int i) { ... }
 public void writeString(String s) { ... }
 ```
 *Giải thích*: Thay vì overloading write(), dùng tên riêng cho từng kiểu dữ liệu
 
-2. **Xử lý constructor an toàn**:
+**Xử lý constructor an toàn**:
 ```java
 public class FileHandler {
     public FileHandler(String path) { ... }
@@ -521,7 +522,7 @@ public class FileHandler {
 ```
 *Giải thích*: Các constructor có kiểu tham số khác biệt rõ ràng
 
-3. **Tránh overloading với generics**:
+**Tránh overloading với generics**:
 ```java
 public void process(List<String> list) { ... }
 public void process(List<Integer> list) { ... } // Lỗi compile do type erasure
