@@ -142,7 +142,7 @@ public class ValidationUtils {
 ### Ví dụ thực tế
 #### Anti-pattern: Không tạo bản sao
 
-````java
+```java
 public final class Period {
     private final Date start;
     private final Date end;
@@ -156,13 +156,13 @@ public final class Period {
     public Date getStart() { return start; }
     public Date getEnd() { return end; }
 }
-````
+```
 > Dữ liệu có thể bị thay đổi từ bên ngoài thông qua tham chiếu Date
 {: .prompt-warning}
 
 #### Pattern đúng: Tạo bản sao phòng thủ
 
-````java
+```java
 public final class SafePeriod {
     private final Date start;
     private final Date end;
@@ -178,7 +178,7 @@ public final class SafePeriod {
     public Date getStart() { return new Date(start.getTime()); } // Trả về bản sao
     public Date getEnd() { return new Date(end.getTime()); }
 }
-````
+```
 > Đảm bảo tính bất biến thực sự, ngăn chặn mọi thay đổi từ bên ngoài
 {: .prompt-tip}
 
@@ -236,7 +236,7 @@ public class ModernPeriod {
 
 ### Mẫu code nâng cao
 
-````java
+```java
 public class SecureDataStore {
     private final List<String> sensitiveData;
 
