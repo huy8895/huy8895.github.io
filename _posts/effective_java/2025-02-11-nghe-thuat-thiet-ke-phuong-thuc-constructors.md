@@ -3,11 +3,11 @@ title: "Nghệ thuật thiết kế phương thức và constructors"
 description: "Tối ưu hóa việc sử dụng constructors trong Java"
 author: huy8895
 date: 2025-02-11 14:57:00 +0700
-categories: []
-tags: []
-pin: true
-math: true
-mermaid: true
+categories: [Effective Java]
+tags: [java, "java 8", best-practices]
+pin: false
+math: false
+mermaid: false
 #image:
 #  path: assets/img/posts/20250211-nghe-thuat-thiet-ke-phuong-thuc-constructors/0.png
 ---

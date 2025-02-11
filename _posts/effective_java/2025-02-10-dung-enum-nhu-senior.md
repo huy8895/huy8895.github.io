@@ -1,5 +1,5 @@
 ---
-title: "Cách một senior sử dụng Enum trong Java"
+title: "Cách một Senior sử dụng Enum trong Java"
 description: "Những kỹ thuật sử dụng Enum hiệu quả trong Java với ví dụ thực tế"
 author: huy8895
 date: 2025-02-10 21:50:00 +0700
