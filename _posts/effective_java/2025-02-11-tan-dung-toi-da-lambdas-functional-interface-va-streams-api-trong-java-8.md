@@ -17,7 +17,6 @@ Java 8 đã mang đến những cải tiến lớn trong lập trình với các
 Trước Java 8, các interface với một phương thức trừu tượng (SAM) thường được triển khai thông qua anonymous classes. Cách tiếp cận này tạo ra nhiều boilerplate code và khó đọc. Lambda expressions ra đời giúp giải quyết những vấn đề này bằng cú pháp ngắn gọn và biểu cảm hơn.
 ### 1.1 Ví dụ so sánh
 
-Ví dụ so sánh khi sắp xếp danh sách:
 ```java
 // Anonymous class (cũ)
 Collections.sort(words, new Comparator<String>() {
@@ -36,7 +35,6 @@ words.sort(comparingInt(String::length));
 
 ### 1.2 Ưu điểm chính
 
-Ưu điểm chính của lambdas:
 - Tự động suy luận kiểu dữ liệu (type inference)
 - Giảm 90% boilerplate code
 - Dễ dàng kết hợp với method references
@@ -44,7 +42,6 @@ words.sort(comparingInt(String::length));
 
 ### 1.3 Trường hợp vẫn cần anonymous classes
 
-**Trường hợp vẫn cần dùng anonymous classes:**
 1. Khi làm việc với abstract class
 2. Interface có nhiều phương thức trừu tượng
 3. Cần truy cập instance của chính đối tượng (this)
@@ -52,14 +49,12 @@ words.sort(comparingInt(String::length));
 
 ### 1.4 Lưu ý quan trọng
 
-**Lưu ý quan trọng:**
 - Giữ lambda ngắn gọn (tối ưu trong 1-3 dòng)
 - Sử dụng generic types đầy đủ để hỗ trợ type inference
 - Với các thao tác phức tạp, vẫn ưu tiên dùng class truyền thống
 
 ### 1.5 Ứng dụng lambda trong enum
 
-**Ứng dụng lambda trong enum:**
 Lambda cho phép đơn giản hóa các enum có hành vi đặc thù. So sánh 2 cách triển khai enum Operation:
 
 ```java
@@ -647,7 +642,7 @@ public class PrimeCounter {
 | Độ phức tạp tính toán   | Cao             | Xử lý ảnh, mã hóa dữ liệu |
 
 ### Best practices
-1. **Chọn nguồn dữ liệu phù hợp:**
+**Chọn nguồn dữ liệu phù hợp:**
 
 ```java
 // Tốt: Mảng, ArrayList, HashMap
@@ -658,7 +653,7 @@ Arrays.stream(numbers).parallel().sum();
 Stream.iterate(0, i -> i+1).parallel().limit(1000); 
 ```
 
-2. **Tránh stateful operations:**
+**Tránh stateful operations:**
 
 ```java
 // Sai: Sử dụng biến ngoài trong parallel stream
@@ -669,7 +664,7 @@ list.parallelStream().forEach(e -> count.incrementAndGet());
 long correctCount = list.parallelStream().count();
 ```
 
-3. **Chú ý thứ tự xử lý:**
+**Chú ý thứ tự xử lý:**
 
 ```java
 // In kết quả không theo thứ tự
@@ -679,7 +674,7 @@ list.parallelStream().forEach(System.out::println);
 list.parallelStream().forEachOrdered(System.out::println);
 ```
 
-4. **Kiểm tra hiệu năng:**
+**Kiểm tra hiệu năng:**
 
 ```java
 // Đo thời gian trước/sau khi parallel
@@ -693,7 +688,7 @@ if (durationParallel < durationSequential * 0.7) {
 }
 ```
 
-5. **Sử dụng SplittableRandom:**
+**Sử dụng SplittableRandom:**
 
 ```java
 // Tạo số ngẫu nhiên cho parallel
