@@ -108,8 +108,9 @@ Operation(String symbol, DoubleBinaryOperator op) {
 ```
 
 ## 2. Ưu tiên sử dụng method references thay cho lambdas
+> Khi lambda chỉ gọi một phương thức đã tồn tại, method reference giúp mã nguồn súc tích và biểu đạt rõ ý định hơn. Cú pháp `Class::method` loại bỏ boilerplate code trong khi vẫn giữ nguyên chức năng.
 
-Khi lambda chỉ gọi một phương thức đã tồn tại, method reference giúp mã nguồn súc tích và biểu đạt rõ ý định hơn. Cú pháp `Class::method` loại bỏ boilerplate code trong khi vẫn giữ nguyên chức năng.
+### 2.1 Ví dụ điển hình
 
 **Ví dụ điển hình với Map.merge:**
 ```java
@@ -120,7 +121,7 @@ map.merge(key, 1, (count, incr) -> count + incr);
 map.merge(key, 1, Integer::sum);
 ```
 
-**Phân loại method reference:**
+### 2.2 Phân loại method reference
 Ưu tiên method references khi ngắn gọn và rõ ràng, nhưng vẫn sử dụng lambda khi cần thiết. Phần tóm tắt bảng so sánh sẽ củng cố điều này, giúp bạn có cái nhìn tổng quan và đưa ra quyết định phù hợp.
 
 | Loại                  | Ví dụ                   | Tương đương lambda         | Ứng dụng điển hình       |
@@ -131,7 +132,7 @@ map.merge(key, 1, Integer::sum);
 | Class constructor     | `TreeMap::new`          | `() -> new TreeMap<>()`       | Tạo đối tượng factory    |
 | Array constructor     | `int[]::new`            | `len -> new int[len]`         | Tạo mảng động            |
 
-**Giải thích chi tiết từng loại:**
+### 2.3 Giải thích chi tiết từng loại
 
 1. **Static method reference**  
    Dùng khi gọi phương thức static của class  
@@ -172,14 +173,15 @@ map.merge(key, 1, Integer::sum);
    int[] numbers = arrayCreator.apply(5);
    ```
 
-**Nguyên tắc áp dụng:**
+### 2.4 Nguyên tắc áp dụng
 - Ưu tiên method reference khi làm mã sạch và dễ hiểu hơn
 - Vẫn dùng lambda nếu:
     - Cần mô tả logic phức tạp
     - Tham số lambda cung cấp tên biến có ý nghĩa
     - Method reference cùng class dài dòng (`GoshThisClassNameIsHumongous::action` → `() -> action()`)
   
-**Trường hợp đặc biệt:**
+### 2.5 Trường hợp đặc biệt
+
 ```java
 // Tránh dùng Function.identity()
 Stream.of(values).map(x -> x)... 
@@ -188,7 +190,7 @@ Stream.of(values).map(x -> x)...
 Stream.of(values).map(Function.identity())...
 ```
 
-**Lưu ý khi refactor:**
+### 2.6 Lưu ý khi refactor
 - IDE thường gợi ý chuyển lambda → method reference, nhưng cần kiểm tra tính rõ ràng
 - Với logic phức tạp, tách thành phương thức riêng và dùng method reference
 - Ưu tiên cách viết nào tự nhiên và dễ đọc hơn
