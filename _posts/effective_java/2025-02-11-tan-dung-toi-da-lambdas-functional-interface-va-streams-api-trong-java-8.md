@@ -349,9 +349,95 @@ List<Card> deck = Stream.of(Suit.values())
 
 ## Ưu tiên các hàm không gây tác dụng phụ trong streams
 
-Khi làm việc với streams, các hàm bạn sử dụng trong các thao tác như `map`, `filter` hay `forEach` nên tránh gây tác dụng phụ (side effects). Một hàm có tác dụng phụ sẽ thay đổi trạng thái bên ngoài hàm, điều này làm giảm tính dễ hiểu và khó kiểm soát hơn.
+**Nguyên tắc vàng:** Stream pipelines nên được xây dựng bằng các hàm thuần khiết (pure functions) - không phụ thuộc vào trạng thái bên ngoài và không thay đổi trạng thái hệ thống.
 
-Hãy cố gắng giữ các hàm trong streams "trong sáng" (pure functions), chỉ nhận đầu vào và trả về kết quả mà không thay đổi trạng thái bên ngoài.
+### Ví dụ điển hình về anti-pattern
+```java
+// Cách tiếp cận sai: Sử dụng forEach để thay đổi state bên ngoài
+Map<String, Long> freq = new HashMap<>();
+words.forEach(word -> {
+    freq.merge(word.toLowerCase(), 1L, Long::sum); // Side-effect!
+});
+```
+
+**Vấn đề:** 
+- Khó parallel hóa 
+- Code khó theo dõi
+- Vi phạm nguyên tắc immutable trong stream
+
+### Cách tiếp cận đúng với Collector
+```java
+// Sử dụng groupingBy + counting collector
+Map<String, Long> freq = words.collect(
+    groupingBy(String::toLowerCase, counting())
+);
+```
+
+**Lợi ích:**
+- Tự động xử lý song song
+- Code ngắn gọn và biểu đạt rõ ý định
+- Dễ dàng tối ưu hiệu năng
+
+### 5 Collector quan trọng cần nắm:
+1. **toList()/toSet()** - Thu thập phần tử vào collection
+```java
+List<String> topNames = filteredStream.collect(toList());
+```
+
+2. **toMap()** - Tạo map từ stream
+```java
+Map<String, Employee> employeeMap = employees.collect(
+    toMap(Employee::getId, Function.identity())
+);
+```
+
+3. **groupingBy()** - Nhóm phần tử theo key
+```java
+Map<Department, List<Employee>> byDept = employees.collect(
+    groupingBy(Employee::getDepartment)
+);
+```
+
+4. **joining()** - Nối chuỗi
+```java
+String csv = strings.collect(joining(", "));
+```
+
+5. **filtering/mapping** - Xử lý downstream
+```java
+Map<City, Set<String>> namesByCity = people.collect(
+    groupingBy(Person::getCity, 
+        mapping(Person::getName, toSet()))
+);
+```
+
+### Xử lý collision trong toMap
+```java
+// Merge function khi key trùng
+Map<Artist, Album> topHits = albums.collect(
+    toMap(Album::artist, a -> a, 
+        (existing, replacement) -> existing.sales() > replacement.sales() 
+            ? existing 
+            : replacement)
+);
+```
+
+### Khi nào được phép dùng forEach?
+- Chỉ để consume kết quả cuối cùng
+- Không thực hiện tính toán/phụ thuộc vào thứ tự
+```java
+// Đúng: In kết quả sau khi xử lý
+resultStream.forEach(System.out::println);
+
+// Sai: Thực hiện logic nghiệp vụ trong forEach
+orders.forEach(order -> processPayment(order)); 
+```
+
+**Best Practices:**
+- Luôn ưu tiên dùng Collector thay vì thao tác thủ công
+- Tách logic phức tạp thành các downstream collector
+- Sử dụng static import Collectors.* để code sạch hơn
+- Kết hợp với Comparator và Function khi cần thiết
 
 ## Ưu tiên trả về Collection thay vì Stream
 
