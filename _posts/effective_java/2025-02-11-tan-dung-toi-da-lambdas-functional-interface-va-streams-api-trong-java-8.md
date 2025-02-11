@@ -165,9 +165,9 @@ map.merge(key, 1, Integer::sum);
 **Nguyên tắc áp dụng:**
 - Ưu tiên method reference khi làm mã sạch và dễ hiểu hơn
 - Vẫn dùng lambda nếu:
-- Cần mô tả logic phức tạp
-- Tham số lambda cung cấp tên biến có ý nghĩa
-- Method reference cùng class dài dòng (`GoshThisClassNameIsHumongous::action` → `() -> action()`)
+    - Cần mô tả logic phức tạp
+    - Tham số lambda cung cấp tên biến có ý nghĩa
+    - Method reference cùng class dài dòng (`GoshThisClassNameIsHumongous::action` → `() -> action()`)
   
 **Trường hợp đặc biệt:**
 ```java
