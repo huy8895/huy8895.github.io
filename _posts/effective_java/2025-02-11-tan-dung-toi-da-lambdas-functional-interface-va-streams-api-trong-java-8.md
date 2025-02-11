@@ -187,14 +187,45 @@ Stream.of(values).map(Function.identity())...
 
 ## Ưu tiên sử dụng functional interface chuẩn
 
-Java 8 cung cấp một số functional interface chuẩn như `Predicate`, `Function`, `Supplier`, và `Consumer`. Hạn chế việc tạo các functional interface tùy chỉnh khi có thể sử dụng các interface này. Điều này không chỉ giúp mã dễ hiểu mà còn tăng tính tương thích với các API khác của Java.
-
-Ví dụ:
+Khi thiết kế API nhận function object, hãy ưu tiên các interface có sẵn trong `java.util.function`. Ví dụ điển hình với LinkedHashMap:
 
 ```java
-Function<String, Integer> stringToLength = String::length;
-Predicate<String> isEmpty = String::isEmpty;
+// Cách cũ: Override method
+protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
+    return size() > 100;
+}
+
+// Cách mới: Sử dụng BiPredicate
+BiPredicate<Map<K,V>, Map.Entry<K,V>> removalPredicate = (map, entry) -> map.size() > 100;
 ```
+
+**Lý do nên dùng interface chuẩn:**
+1. Giảm số lượng interface cần học
+2. Tận dụng các phương thức mặc định (ví dụ: `and()`, `or()` trong Predicate)
+3. Dễ dàng kết hợp với các API khác
+
+**6 functional interface cốt lõi:**
+| Interface          | Phương thức     | Ví dụ                  | Ứng dụng điển hình     |
+|--------------------|-----------------|------------------------|------------------------|
+| `Predicate<T>`     | test(T) → bool  | Collection::isEmpty    | Lọc phần tử trong stream |
+| `Function<T,R>`    | apply(T) → R    | String::length         | Chuyển đổi dữ liệu     |
+| `Consumer<T>`      | accept(T) → void| System.out::println    | Thao tác phụ          |
+| `Supplier<T>`      | get() → T       | Instant::now           | Khởi tạo lazy         |
+| `UnaryOperator<T>` | apply(T) → T    | String::toLowerCase    | Thao tác trên 1 toán hạng |
+| `BinaryOperator<T>`| apply(T,T) → T  | BigInteger::add        | Thao tác trên 2 toán hạng |
+
+**Biến thể cho primitive types:**
+- Tránh boxing/unboxing với `IntPredicate`, `LongConsumer`,...
+- Ví dụ hiệu năng cao:
+```java
+IntPredicate evenNumber = n -> n % 2 == 0; // Tốt hơn Predicate<Integer>
+DoubleFunction<String> converter = d -> String.format("%.2f", d); 
+```
+
+**Lưu ý khi thiết kế API:**
+- Đừng tự tạo interface mới nếu đã có sẵn
+- Với tham số double/ int/ long, ưu tiên dùng primitive variants
+- Khi cần 2 tham số, dùng `BiPredicate`, `BiFunction` thay vì tự định nghĩa
 
 ## Sử dụng Streams API một cách hợp lý
 
