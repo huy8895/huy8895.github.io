@@ -380,9 +380,7 @@ List<Card> deck = Stream.of(Suit.values())
 
 ## 5. Ưu tiên các hàm không gây tác dụng phụ trong streams
 
-**Nguyên tắc vàng:** Stream pipelines nên được xây dựng bằng các hàm thuần khiết (pure functions) - không phụ thuộc vào trạng thái bên ngoài và không thay đổi trạng thái hệ thống.
-
-### Ví dụ điển hình về anti-pattern
+### 5.1 Ví dụ điển hình về anti-pattern
 ```java
 // Cách tiếp cận sai: Sử dụng forEach để thay đổi state bên ngoài
 Map<String, Long> freq = new HashMap<>();
@@ -396,7 +394,7 @@ words.forEach(word -> {
 - Code khó theo dõi
 - Vi phạm nguyên tắc immutable trong stream
 
-### Cách tiếp cận đúng với Collector
+### 5.2 Cách tiếp cận đúng với Collector
 ```java
 // Sử dụng groupingBy + counting collector
 Map<String, Long> freq = words.collect(
@@ -409,7 +407,7 @@ Map<String, Long> freq = words.collect(
 - Code ngắn gọn và biểu đạt rõ ý định
 - Dễ dàng tối ưu hiệu năng
 
-### 5 Collector quan trọng cần nắm:
+### 5.3 5 Collector quan trọng cần nắm
 1. **toList()/toSet()** - Thu thập phần tử vào collection
 ```java
 List<String> topNames = filteredStream.collect(toList());
@@ -442,7 +440,7 @@ Map<City, Set<String>> namesByCity = people.collect(
 );
 ```
 
-### Xử lý collision trong toMap
+### 5.4 Xử lý collision trong toMap
 ```java
 // Merge function khi key trùng
 Map<Artist, Album> topHits = albums.collect(
@@ -453,7 +451,7 @@ Map<Artist, Album> topHits = albums.collect(
 );
 ```
 
-### Khi nào được phép dùng forEach?
+### 5.5 Khi nào được phép dùng forEach
 - Chỉ để consume kết quả cuối cùng
 - Không thực hiện tính toán/phụ thuộc vào thứ tự
 
@@ -475,7 +473,7 @@ orders.forEach(order -> processPayment(order));
 
 **Nguyên tắc cốt lõi:** Khi thiết kế API trả về chuỗi phần tử, cần hỗ trợ cả 2 trường hợp sử dụng: xử lý stream và vòng lặp for-each.
 
-### Ví dụ anti-pattern
+### 6.1 Ví dụ anti-pattern
 ```java
 // API chỉ trả về Stream
 public Stream<ProcessHandle> getAllProcesses() {
@@ -494,7 +492,7 @@ for (ProcessHandle ph : (Iterable<ProcessHandle>)
 - Giảm hiệu năng khi ép kiểu
 - Khó kết hợp với code cũ
 
-### Pattern đúng: Trả về Collection
+### 6.2 Pattern đúng: Trả về Collection
 ```java
 public Collection<ProcessHandle> getAllProcesses() {
     return new ArrayList<>(ProcessHandle.allProcesses().collect(toList()));
@@ -511,8 +509,9 @@ for (ProcessHandle ph : getAllProcesses()) {
 - Cho phép sử dụng cả stream và for-each
 - Dễ dàng mở rộng
 
-### Các trường hợp đặc biệt
+### 6.3 Các trường hợp đặc biệt
 **1. Dữ liệu lớn không lưu trữ được:**
+
 ```java
 // Trả về Stream khi dữ liệu quá lớn
 public Stream<LogEntry> readLogEntries(Path file) throws IOException {
@@ -521,6 +520,7 @@ public Stream<LogEntry> readLogEntries(Path file) throws IOException {
 ```
 
 **2. Custom Collection cho dữ liệu đặc biệt:**
+
 ```java
 // PowerSet implementation
 public class PowerSet {
@@ -535,7 +535,7 @@ public class PowerSet {
 }
 ```
 
-### Best Practices
+### 6.4 Best Practices
 
 | Trường hợp               | Kiểu trả về ưu tiên  | Lý do                     |
 |--------------------------|----------------------|---------------------------|
@@ -589,8 +589,7 @@ public class SubLists {
 - Kết quả không chính xác
 - Treo hệ thống (liveness failure)
 
-### Ví dụ anti-pattern
-
+### 7.1 Ví dụ anti-pattern
 ```java
 // Parallel stream gây treo hệ thống
 public class MersennePrimes {
@@ -612,7 +611,7 @@ public class MersennePrimes {
 - Không in kết quả, CPU tăng 90% vô thời hạn
 - Nguyên nhân: Stream.iterate + limit khó chia nhỏ tác vụ
 
-### Pattern đúng khi dùng parallel
+### 7.2 Pattern đúng khi dùng parallel
 
 ```java
 // Ví dụ tính số nguyên tố <= n với parallel hiệu quả
@@ -631,7 +630,7 @@ public class PrimeCounter {
 - Tốc độ tăng ~3.7 lần trên CPU 4 nhân
 - Nguyên nhân: Dữ liệu nguồn (LongStream.range) dễ chia nhỏ
 
-### Các yếu tố ảnh hưởng đến hiệu quả
+### 7.3 Các yếu tố ảnh hưởng đến hiệu quả
 
 | Yếu tố                  | Tốt cho parallel | Ví dụ                  |
 |-------------------------|------------------|------------------------|
@@ -641,7 +640,7 @@ public class PrimeCounter {
 | Kích thước dữ liệu      | Lớn (>100k)     | List với 1 triệu phần tử |
 | Độ phức tạp tính toán   | Cao             | Xử lý ảnh, mã hóa dữ liệu |
 
-### Best practices
+### 7.4 Best practices
 **Chọn nguồn dữ liệu phù hợp:**
 
 ```java
