@@ -12,7 +12,7 @@ mermaid: true
 
 Java 8 đã mang đến những cải tiến lớn trong lập trình với các tính năng như lambdas, functional interface và Streams API. Bài viết này sẽ giúp bạn tận dụng tối đa các tính năng này thông qua những nguyên tắc và lời khuyên thực tế.
 
-## Ưu tiên sử dụng lambdas thay vì anonymous classes
+## 1. Ưu tiên sử dụng lambdas thay vì anonymous classes
 
 Trước Java 8, các interface với một phương thức trừu tượng (SAM) thường được triển khai thông qua anonymous classes. Cách tiếp cận này tạo ra nhiều boilerplate code và khó đọc. Lambda expressions ra đời giúp giải quyết những vấn đề này bằng cú pháp ngắn gọn và biểu cảm hơn.
 
@@ -97,7 +97,7 @@ Operation(String symbol, DoubleBinaryOperator op) {
 }
 ```
 
-## Ưu tiên sử dụng method references thay cho lambdas
+## 2. Ưu tiên sử dụng method references thay cho lambdas
 
 Khi lambda chỉ gọi một phương thức đã tồn tại, method reference giúp mã nguồn súc tích và biểu đạt rõ ý định hơn. Cú pháp `Class::method` loại bỏ boilerplate code trong khi vẫn giữ nguyên chức năng.
 
@@ -185,7 +185,7 @@ Stream.of(values).map(Function.identity())...
 - Method reference chỉ thực sự hữu ích khi làm code sáng nghĩa
 - Khi nghi ngờ, hãy viết cả 2 cách và so sánh độ rõ ràng
 
-## Ưu tiên sử dụng functional interface chuẩn
+## 3. Ưu tiên sử dụng functional interface chuẩn
 
 Khi thiết kế API nhận function object, hãy ưu tiên các interface có sẵn trong `java.util.function`. Ví dụ điển hình với LinkedHashMap:
 
@@ -279,7 +279,8 @@ public interface ThrowingFunction<T, R> {
     }
 }
 ```
-## Sử dụng Streams API một cách hợp lý
+
+## 4. Sử dụng Streams API một cách hợp lý
 
 Streams API cung cấp một cách mạnh mẽ để xử lý các tập hợp dữ liệu. Tuy nhiên, sử dụng streams quá mức có thể gây khó hiểu và phức tạp không cần thiết. Bạn nên sử dụng streams khi chúng giúp mã ngắn gọn và dễ đọc hơn, nhưng không nên lạm dụng chúng cho các trường hợp đơn giản mà một vòng lặp for thông thường sẽ dễ hiểu hơn.
 
@@ -348,7 +349,7 @@ List<Card> deck = Stream.of(Suit.values())
 - Refactor code thường xuyên để cân bằng giữa stream và loop
 - Test cả hai phiên bản stream và non-stream để so sánh
 
-## Ưu tiên các hàm không gây tác dụng phụ trong streams
+## 5. Ưu tiên các hàm không gây tác dụng phụ trong streams
 
 **Nguyên tắc vàng:** Stream pipelines nên được xây dựng bằng các hàm thuần khiết (pure functions) - không phụ thuộc vào trạng thái bên ngoài và không thay đổi trạng thái hệ thống.
 
@@ -441,7 +442,7 @@ orders.forEach(order -> processPayment(order));
 - Sử dụng static import Collectors.* để code sạch hơn
 - Kết hợp với Comparator và Function khi cần thiết
 
-## Ưu tiên trả về Collection thay vì Stream
+## 6. Ưu tiên trả về Collection thay vì Stream
 
 **Nguyên tắc cốt lõi:** Khi thiết kế API trả về chuỗi phần tử, cần hỗ trợ cả 2 trường hợp sử dụng: xử lý stream và vòng lặp for-each.
 
@@ -552,7 +553,7 @@ public class SubLists {
 - Triển khai custom collection cho cấu trúc dữ liệu đặc biệt
 - Cung cấp adapter methods nếu cần hỗ trợ cả 2 cách dùng
 
-## Cẩn trọng khi sử dụng streams parallel
+## 7. Cẩn trọng khi sử dụng streams parallel
 
 **Nguyên tắc cốt lõi:** Parallel stream không phải là giải pháp vạn năng. Sử dụng không đúng cách có thể dẫn đến:
 - Sự cố hiệu năng (chậm hơn phiên bản tuần tự)
@@ -680,6 +681,6 @@ random.ints(100_000).parallel().filter(i -> i % 2 == 0).count();
   - Đã test hiệu năng thực tế
 - Ưu tiên sử dụng các framework parallel chuyên dụng (Fork/Join) cho tác vụ phức tạp
 
-### Kết luận
+## 8. Kết luận
 
 Java 8 mang đến nhiều tính năng mới để cải thiện hiệu suất và độ dễ đọc của mã, nhưng việc sử dụng chúng một cách hiệu quả yêu cầu bạn phải hiểu rõ về lambdas, functional interface và Streams API. Bằng cách tuân theo các nguyên tắc trên, bạn có thể tận dụng tối đa những lợi ích mà chúng mang lại.
