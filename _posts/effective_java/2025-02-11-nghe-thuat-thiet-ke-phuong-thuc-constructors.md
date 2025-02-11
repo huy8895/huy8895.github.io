@@ -21,7 +21,8 @@ mermaid: true
 
 ### Ví dụ thực tế
 #### Anti-pattern: Không kiểm tra tham số
-```java:example/DataProcessor.java
+
+```java
 public void processData(String input) {
     // Không kiểm tra input null
     int length = input.length(); // Ném NullPointerException tại đây
@@ -31,7 +32,8 @@ public void processData(String input) {
 **Hậu quả**: Lỗi xảy ra muộn, khó truy vết nguồn gốc, có thể làm hỏng trạng thái hệ thống
 
 #### Pattern đúng: Kiểm tra đầu vào
-```java:example/DataProcessor.java
+
+```java
 public void processData(String input) {
     if (input == null) {
         throw new IllegalArgumentException("Input không được null");
@@ -42,6 +44,7 @@ public void processData(String input) {
 **Lợi ích**: Phát hiện lỗi ngay lập tức, thông báo rõ ràng về nguyên nhân
 
 ### Công cụ hỗ trợ quan trọng
+
 | Công cụ               | Mục đích sử dụng                  | Phiên bản Java |
 |-----------------------|-----------------------------------|----------------|
 | requireNonNull        | Kiểm tra null                    | 7+             |
@@ -50,7 +53,8 @@ public void processData(String input) {
 
 ### Best practices
 1. **Document exceptions**:
-```java:example/MathUtils.java
+
+```java
 /**
  * @param divisor số chia phải khác 0
  * @throws ArithmeticException nếu divisor bằng 0
@@ -61,14 +65,16 @@ public double divide(int dividend, int divisor) {
 ```
 
 2. **Sử dụng annotation @Nullable**:
-```java:example/UserService.java
+
+```java
 public void updateProfile(@Nullable String nickname) {
     // Xử lý giá trị có thể null
 }
 ```
 
 3. **Kiểm tra tham số trì hoãn**:
-```java:example/Collections.java
+
+```java
 // Chỉ kiểm tra khi thực sự cần thiết
 public void sort(List<?> list) {
     // Kiểm tra trong quá trình so sánh phần tử
@@ -76,6 +82,7 @@ public void sort(List<?> list) {
 ```
 
 ### So sánh cách tiếp cận
+
 | Tiêu chí            | Cách cũ                  | Cách mới                 |
 |---------------------|--------------------------|--------------------------|
 | Thời điểm phát hiện | Khi sử dụng tham số      | Ngay khi gọi method      |
@@ -84,7 +91,8 @@ public void sort(List<?> list) {
 | Bảo trì             | Khó theo dõi điều kiện   | Điều kiện rõ ràng        |
 
 ### Mẫu code chuẩn
-```java:example/ValidationUtils.java
+
+```java
 public class ValidationUtils {
     // Kiểm tra null với thông báo tùy chỉnh
     public void configure(Strategy strategy) {
@@ -107,6 +115,7 @@ public class ValidationUtils {
     }
 }
 ```
+
 **Giải thích**:
 - Sử dụng `requireNonNull` cho kiểm tra null tự động
 - Assertion cho kiểm tra nội bộ
