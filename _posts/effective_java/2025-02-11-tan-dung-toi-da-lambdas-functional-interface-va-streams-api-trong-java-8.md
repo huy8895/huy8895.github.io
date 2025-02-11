@@ -14,21 +14,87 @@ Java 8 đã mang đến những cải tiến lớn trong lập trình với các
 
 ## Ưu tiên sử dụng lambdas thay vì anonymous classes
 
-Trước Java 8, chúng ta thường sử dụng các lớp nặc danh (anonymous classes) để triển khai các interface hoặc abstract class với một phương thức duy nhất. Với sự ra đời của lambdas, việc triển khai các interface đơn giản trở nên gọn gàng và dễ đọc hơn. Sử dụng lambdas giúp mã ngắn hơn, dễ hiểu hơn, và tránh được sự phức tạp không cần thiết.
+Trước Java 8, các interface với một phương thức trừu tượng (SAM) thường được triển khai thông qua anonymous classes. Cách tiếp cận này tạo ra nhiều boilerplate code và khó đọc. Lambda expressions ra đời giúp giải quyết những vấn đề này bằng cú pháp ngắn gọn và biểu cảm hơn.
 
-Ví dụ:
+Ví dụ so sánh khi sắp xếp danh sách:
+```java
+// Anonymous class (cũ)
+Collections.sort(words, new Comparator<String>() {
+    public int compare(String s1, String s2) {
+        return Integer.compare(s1.length(), s2.length());
+    }
+});
+
+// Lambda expression (Java 8+)
+Collections.sort(words, 
+    (s1, s2) -> Integer.compare(s1.length(), s2.length()));
+
+// Method reference (cách viết tối ưu)
+words.sort(comparingInt(String::length));
+```
+
+Ưu điểm chính của lambdas:
+- Tự động suy luận kiểu dữ liệu (type inference)
+- Giảm 90% boilerplate code
+- Dễ dàng kết hợp với method references
+- Hỗ trợ lập trình hàm hiệu quả
+
+**Trường hợp vẫn cần dùng anonymous classes:**
+1. Khi làm việc với abstract class
+2. Interface có nhiều phương thức trừu tượng
+3. Cần truy cập instance của chính đối tượng (this)
+4. Yêu cầu serialization (lambda và anonymous class đều hạn chế serialization)
+
+**Lưu ý quan trọng:**
+- Giữ lambda ngắn gọn (tối ưu trong 1-3 dòng)
+- Sử dụng generic types đầy đủ để hỗ trợ type inference
+- Với các thao tác phức tạp, vẫn ưu tiên dùng class truyền thống
+
+**Ứng dụng lambda trong enum:**
+Lambda cho phép đơn giản hóa các enum có hành vi đặc thù. So sánh 2 cách triển khai enum Operation:
 
 ```java
-// Anonymous class
-Runnable r1 = new Runnable() {
-    @Override
-    public void run() {
-        System.out.println("Hello from anonymous class");
-    }
-};
+// Cách cũ dùng class body riêng
+public enum Operation {
+    PLUS("+") {
+        public double apply(double x, double y) { return x + y; }
+    },
+    // ... các hằng số khác ...
+}
 
-// Lambda expression
-Runnable r2 = () -> System.out.println("Hello from lambda");
+// Cách mới dùng lambda
+public enum Operation {
+    PLUS("+", (x, y) -> x + y),
+    MINUS("-", (x, y) -> x - y),
+    TIMES("*", (x, y) -> x * y),
+    DIVIDE("/", (x, y) -> x / y);
+
+    private final String symbol;
+    private final DoubleBinaryOperator op;
+
+    Operation(String symbol, DoubleBinaryOperator op) {
+        this.symbol = symbol;
+        this.op = op;
+    }
+
+    public double apply(double x, double y) {
+        return op.applyAsDouble(x, y);
+    }
+}
+```
+
+Ưu điểm khi dùng lambda với enum:
+- Giảm 70% số dòng code
+- Tập trung logic vào nơi khai báo hằng số
+- Dễ dàng thêm/hủy các phép toán mới
+
+**Giới hạn khi dùng lambda trong enum:**
+```java
+// Không thể truy cập instance members từ lambda trong constructor
+Operation(String symbol, DoubleBinaryOperator op) {
+    this.symbol = symbol;
+    this.op = x -> x * this.symbol.length(); // LỖI COMPILE
+}
 ```
 
 ## Ưu tiên sử dụng method references thay cho lambdas
