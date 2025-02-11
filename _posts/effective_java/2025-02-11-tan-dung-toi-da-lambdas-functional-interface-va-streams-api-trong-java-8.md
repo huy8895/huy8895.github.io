@@ -441,18 +441,112 @@ orders.forEach(order -> processPayment(order));
 
 ## Ưu tiên trả về Collection thay vì Stream
 
-Streams là một công cụ mạnh mẽ, nhưng khi trả về dữ liệu từ một phương thức, bạn nên ưu tiên trả về `Collection` thay vì `Stream`. Điều này giúp người dùng phương thức có thể thao tác với dữ liệu trả về dễ dàng hơn, đặc biệt là khi họ không quen thuộc với Streams API.
+**Nguyên tắc cốt lõi:** Khi thiết kế API trả về chuỗi phần tử, cần hỗ trợ cả 2 trường hợp sử dụng: xử lý stream và vòng lặp for-each.
 
-Ví dụ:
-
+### Ví dụ anti-pattern
 ```java
-// Trả về List thay vì Stream
-public List<String> getNames() {
-    return people.stream()
-                 .map(Person::getName)
-                 .collect(Collectors.toList());
+// API chỉ trả về Stream
+public Stream<ProcessHandle> getAllProcesses() {
+    return ProcessHandle.allProcesses();
+}
+
+// Client code phải dùng adapter
+for (ProcessHandle ph : (Iterable<ProcessHandle>) 
+    ProcessHandle.allProcesses()::iterator) { // Code rườm rà
+    // Xử lý
 }
 ```
+
+**Vấn đề:**
+- Client code phải tự xử lý chuyển đổi
+- Giảm hiệu năng khi ép kiểu
+- Khó kết hợp với code cũ
+
+### Pattern đúng: Trả về Collection
+```java
+public Collection<ProcessHandle> getAllProcesses() {
+    return new ArrayList<>(ProcessHandle.allProcesses().collect(toList()));
+}
+
+// Client code đơn giản
+for (ProcessHandle ph : getAllProcesses()) {
+    // Xử lý
+}
+```
+
+**Lợi ích:**
+- Tương thích ngược với code cũ
+- Cho phép sử dụng cả stream và for-each
+- Dễ dàng mở rộng
+
+### Các trường hợp đặc biệt
+**1. Dữ liệu lớn không lưu trữ được:**
+```java
+// Trả về Stream khi dữ liệu quá lớn
+public Stream<LogEntry> readLogEntries(Path file) throws IOException {
+    return Files.lines(file).map(LogEntry::parse);
+}
+```
+
+**2. Custom Collection cho dữ liệu đặc biệt:**
+```java
+// PowerSet implementation
+public class PowerSet {
+    public static <E> Collection<Set<E>> of(Set<E> s) {
+        return new AbstractList<Set<E>>() {
+            @Override public int size() { return 1 << src.size(); }
+            @Override public Set<E> get(int index) { 
+                // Tạo subset từ index dạng bit vector
+            }
+        };
+    }
+}
+```
+
+### Best Practices
+| Trường hợp               | Kiểu trả về ưu tiên  | Lý do                     |
+|--------------------------|----------------------|---------------------------|
+| Dữ liệu nhỏ               | `Collection`         | Tương thích cả 2 cách dùng |
+| Dữ liệu lớn/không lưu trữ | `Stream`             | Tiết kiệm bộ nhớ          |
+| Cấu trúc dữ liệu đặc biệt | Custom `Collection`  | Tối ưu hiệu năng          |
+
+**Adapter pattern khi cần:**
+```java
+// Chuyển Iterable sang Stream
+public static <E> Stream<E> streamOf(Iterable<E> iterable) {
+    return StreamSupport.stream(iterable.spliterator(), false);
+}
+
+// Chuyển Stream sang Iterable
+public static <E> Iterable<E> iterableOf(Stream<E> stream) {
+    return stream::iterator;
+}
+```
+
+**Ví dụ xử lý sublist:**
+```java
+public class SubLists {
+    public static <E> Stream<List<E>> of(List<E> list) {
+        return IntStream.range(0, list.size())
+            .mapToObj(start -> 
+                IntStream.rangeClosed(start + 1, list.size())
+                    .mapToObj(end -> list.subList(start, end)))
+            .flatMap(x -> x);
+    }
+}
+// Sử dụng: SubLists.of(list).forEach(System.out::println);
+```
+
+**Lưu ý hiệu năng:**
+- Stream-to-Iterable adapter giảm tốc độ ~2.3 lần
+- Custom Collection tăng tốc ~1.4 lần so với Stream
+- Cân nhắc khi dữ liệu lớn hơn 2^31 phần tử (giới hạn `Collection.size()`)
+
+**Kết luận:**
+- Luôn ưu tiên `Collection` cho public API
+- Chỉ trả về `Stream` khi xử lý dữ liệu lớn/real-time
+- Triển khai custom collection cho cấu trúc dữ liệu đặc biệt
+- Cung cấp adapter methods nếu cần hỗ trợ cả 2 cách dùng
 
 ## Cẩn trọng khi sử dụng streams song song
 
