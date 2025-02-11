@@ -226,6 +226,7 @@ public class ModernPeriod {
 ```
 
 ### So sánh cách tiếp cận
+
 | Tiêu chí          | Cách cũ                  | Cách mới với bản sao      |
 |--------------------|--------------------------|--------------------------|
 | An toàn dữ liệu   | Dễ bị thay đổi trái phép | Bảo vệ toàn vẹn dữ liệu  |
