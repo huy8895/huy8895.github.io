@@ -551,17 +551,127 @@ public class SubLists {
 - Triển khai custom collection cho cấu trúc dữ liệu đặc biệt
 - Cung cấp adapter methods nếu cần hỗ trợ cả 2 cách dùng
 
-## Cẩn trọng khi sử dụng streams song song
+## Cẩn trọng khi sử dụng streams parallel
 
-Java cung cấp khả năng chạy streams song song (`parallelStream`) để tăng hiệu suất trong các tác vụ đa luồng. Tuy nhiên, việc sử dụng streams song song cần thận trọng vì nó có thể dẫn đến các vấn đề như điều kiện tranh chấp (race condition), và không phải lúc nào nó cũng mang lại hiệu suất tốt hơn. Chỉ nên sử dụng `parallelStream` khi bạn chắc chắn rằng tác vụ đó có thể tận dụng được lợi thế của việc xử lý song song.
+**Nguyên tắc cốt lõi:** Parallel stream không phải là giải pháp vạn năng. Sử dụng không đúng cách có thể dẫn đến:
+- Sự cố hiệu năng (chậm hơn phiên bản tuần tự)
+- Kết quả không chính xác
+- Treo hệ thống (liveness failure)
 
-Ví dụ:
+### Ví dụ anti-pattern
 
 ```java
-// Sử dụng parallelStream
-list.parallelStream()
-    .forEach(item -> processItem(item));
+// Parallel stream gây treo hệ thống
+public class MersennePrimes {
+    public static void main(String[] args) {
+        primes().parallel() // Thêm parallel() gây hại
+               .map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
+               .filter(mersenne -> mersenne.isProbablePrime(50))
+               .limit(20)
+               .forEach(System.out::println);
+    }
+    
+    static Stream<BigInteger> primes() {
+        return Stream.iterate(TWO, BigInteger::nextProbablePrime);
+    }
+}
 ```
+
+**Hậu quả:**
+- Không in kết quả, CPU tăng 90% vô thời hạn
+- Nguyên nhân: Stream.iterate + limit khó chia nhỏ tác vụ
+
+### Pattern đúng khi dùng parallel
+
+```java
+// Ví dụ tính số nguyên tố <= n với parallel hiệu quả
+public class PrimeCounter {
+    public static long pi(long n) {
+        return LongStream.rangeClosed(2, n)
+                        .parallel() // Hiệu quả với rangeClosed
+                        .mapToObj(BigInteger::valueOf)
+                        .filter(i -> i.isProbablePrime(50))
+                        .count();
+    }
+}
+```
+
+**Kết quả:**
+- Tốc độ tăng ~3.7 lần trên CPU 4 nhân
+- Nguyên nhân: Dữ liệu nguồn (LongStream.range) dễ chia nhỏ
+
+### Các yếu tố ảnh hưởng đến hiệu quả
+| Yếu tố                  | Tốt cho parallel | Ví dụ                  |
+|-------------------------|------------------|------------------------|
+| Nguồn dữ liệu           | ArrayList, mảng  | new ArrayList().stream().parallel() |
+| Kiểu dữ liệu nguyên thủy| Có              | IntStream.range(1,100).parallel() |
+| Thao tác terminal       | Reduce, count    | sum(), reduce(0, Integer::sum) |
+| Kích thước dữ liệu      | Lớn (>100k)     | List với 1 triệu phần tử |
+| Độ phức tạp tính toán   | Cao             | Xử lý ảnh, mã hóa dữ liệu |
+
+### Best practices
+1. **Chọn nguồn dữ liệu phù hợp:**
+```java
+// Tốt: Mảng, ArrayList, HashMap
+int[] numbers = new int[10_000];
+Arrays.stream(numbers).parallel().sum();
+
+// Xấu: Stream.iterate, HashSet nhỏ
+Stream.iterate(0, i -> i+1).parallel().limit(1000); 
+```
+
+2. **Tránh stateful operations:**
+```java
+// Sai: Sử dụng biến ngoài trong parallel stream
+AtomicInteger count = new AtomicInteger();
+list.parallelStream().forEach(e -> count.incrementAndGet());
+
+// Đúng: Dùng reduction thay thế
+long correctCount = list.parallelStream().count();
+```
+
+3. **Chú ý thứ tự xử lý:**
+```java
+// In kết quả không theo thứ tự
+list.parallelStream().forEach(System.out::println);
+
+// Giữ nguyên thứ tự (giảm hiệu năng)
+list.parallelStream().forEachOrdered(System.out::println);
+```
+
+4. **Kiểm tra hiệu năng:**
+```java
+// Đo thời gian trước/sau khi parallel
+long start = System.nanoTime();
+result = stream.count();
+long duration = (System.nanoTime() - start) / 1_000_000;
+
+// Chỉ parallel nếu cải thiện đáng kể
+if (durationParallel < durationSequential * 0.7) {
+    // Giữ parallel
+}
+```
+
+5. **Sử dụng SplittableRandom:**
+```java
+// Tạo số ngẫu nhiên cho parallel
+SplittableRandom random = new SplittableRandom();
+random.ints(100_000).parallel().filter(i -> i % 2 == 0).count();
+```
+
+**Cảnh báo:**
+- Không dùng `parallel()` cho I/O operations
+- Tránh dùng với các thao tác blocking
+- Test kỹ trên môi trường production-like
+
+### Kết luận
+- Parallel stream là con dao hai lưỡi
+- Chỉ sử dụng khi:
+  - Dữ liệu đủ lớn (>100k phần tử)
+  - Nguồn stream dễ chia nhỏ (array, ArrayList)
+  - Thao tác đủ phức tạp (tính toán CPU-intensive)
+  - Đã test hiệu năng thực tế
+- Ưu tiên sử dụng các framework parallel chuyên dụng (Fork/Join) cho tác vụ phức tạp
 
 ### Kết luận
 
