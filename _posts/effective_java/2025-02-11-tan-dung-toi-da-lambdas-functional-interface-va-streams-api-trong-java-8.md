@@ -99,19 +99,72 @@ Operation(String symbol, DoubleBinaryOperator op) {
 
 ## Ưu tiên sử dụng method references thay cho lambdas
 
-Trong nhiều trường hợp, method references có thể thay thế lambdas để mã rõ ràng hơn. Nếu lambda chỉ gọi một phương thức có sẵn, bạn nên dùng method reference thay vì lambda để thể hiện ý định của mã một cách rõ ràng hơn.
+Khi lambda chỉ gọi một phương thức đã tồn tại, method reference giúp mã nguồn súc tích và biểu đạt rõ ý định hơn. Cú pháp `Class::method` loại bỏ boilerplate code trong khi vẫn giữ nguyên chức năng.
 
-Ví dụ:
-
+**Ví dụ điển hình với Map.merge:**
 ```java
-// Lambda
-list.forEach(item -> System.out.println(item));
+// Lambda version
+map.merge(key, 1, (count, incr) -> count + incr);
 
-// Method reference
-list.forEach(System.out::println);
+// Method reference version (ưu tiên)
+map.merge(key, 1, Integer::sum);
 ```
 
-Method references giúp mã sạch hơn, dễ đọc và giúp người khác nhanh chóng hiểu rõ bạn đang gọi đến phương thức nào.
+**Phân loại method reference:**
+Ưu tiên method references khi ngắn gọn và rõ ràng, nhưng vẫn sử dụng lambda khi cần thiết. Phần tóm tắt bảng so sánh sẽ củng cố điều này, giúp bạn có cái nhìn tổng quan và đưa ra quyết định phù hợp.
+
+| Loại                  | Ví dụ                   | Tương đương lambda         | Ứng dụng điển hình       |
+|-----------------------|-------------------------|----------------------------|--------------------------|
+| Static method         | `Integer::parseInt`    | `str -> Integer.parseInt(str)` | Xử lý chuyển đổi kiểu dữ liệu |
+| Bound instance method | `Instant.now()::isAfter` | `t -> Instant.now().isAfter(t)` | Kiểm tra trạng thái đối tượng cụ thể |
+| Unbound instance method | `String::toLowerCase`  | `str -> str.toLowerCase()`   | Xử lý chuỗi trong stream |
+| Class constructor     | `TreeMap::new`          | `() -> new TreeMap<>()`       | Tạo đối tượng factory    |
+| Array constructor     | `int[]::new`            | `len -> new int[len]`         | Tạo mảng động            |
+
+**Giải thích:**
+1. Bound reference: Đối tượng receiver được xác định trước
+   ```java
+   // Filter các thời điểm sau thời điểm hiện tại
+   List<Instant> futureTimes = times.stream()
+       .filter(Instant.now()::isAfter)
+       .collect(Collectors.toList());
+   ```
+
+2. Unbound reference: Đối tượng receiver được truyền qua tham số
+   ```java
+   // Chuẩn hóa danh sách email
+   List<String> emails = rawInputs.stream()
+       .map(String::toLowerCase)
+       .collect(Collectors.toList());
+   ```
+
+3. Constructor reference: Thay thế factory pattern
+   ```java
+   Supplier<List<String>> listFactory = ArrayList::new;
+   ```
+
+**Nguyên tắc áp dụng:**
+- Ưu tiên method reference khi làm mã sạch và dễ hiểu hơn
+- Vẫn dùng lambda nếu:
+  - Cần mô tả logic phức tạp
+  - Tham số lambda cung cấp tên biến có ý nghĩa
+  - Method reference cùng class dài dòng (`GoshThisClassNameIsHumongous::action` → `() -> action()`)
+  
+**Trường hợp đặc biệt:**
+```java
+// Tránh dùng Function.identity()
+Stream.of(values).map(x -> x)... 
+
+// Thay vì
+Stream.of(values).map(Function.identity())...
+```
+
+**Lưu ý khi refactor:**
+- IDE thường gợi ý chuyển lambda → method reference, nhưng cần kiểm tra tính rõ ràng
+- Với logic phức tạp, tách thành phương thức riêng và dùng method reference
+- Ưu tiên cách viết nào tự nhiên và dễ đọc hơn
+- Method reference chỉ thực sự hữu ích khi làm code sáng nghĩa
+- Khi nghi ngờ, hãy viết cả 2 cách và so sánh độ rõ ràng
 
 ## Ưu tiên sử dụng functional interface chuẩn
 
