@@ -787,4 +787,148 @@ public String[] getOptimizedNames() {
 
 ## 7. Dùng Optional đúng cách
 
+
+
 ## 8. Viết tài liệu cho API public
+
+### Nguyên tắc cốt lõi
+- **Bắt buộc với mọi API public**: Mọi class, method, field public đều cần doc comment
+- **Mô tả hợp đồng rõ ràng**: Định nghĩa preconditions, postconditions và side effects
+- **Tuân thủ chuẩn Javadoc**: Sử dụng tag phù hợp và format đúng quy ước
+
+### Ví dụ thực tế
+#### Anti-pattern: Không có doc comment
+
+```java
+public E get(int index) {
+    // ... implementation ...
+}
+```
+
+**Vấn đề**: Người dùng không biết cách sử dụng method, dễ gây lỗi
+
+#### Pattern đúng: Doc comment đầy đủ
+
+```java
+/**
+ * Trả về phần tử tại vị trí chỉ định trong danh sách.
+ * 
+ * <p>Method này không đảm bảo thời gian chạy hằng số. 
+ * Trong một số triển khai, thời gian chạy tỷ lệ với vị trí phần tử.
+ *
+ * @param index chỉ số phần tử cần lấy, phải >=0 và < size()
+ * @return phần tử tại vị trí chỉ định
+ * @throws IndexOutOfBoundsException nếu index không hợp lệ
+ */
+public E get(int index) {
+    // ... implementation ...
+}
+```
+
+**Lợi ích**: Tài liệu rõ ràng, hướng dẫn sử dụng đúng cách
+
+### Các tag quan trọng
+
+| Tag            | Mục đích                                  | Ví dụ                          |
+|-----------------|------------------------------------------|--------------------------------|
+| @param         | Mô tả tham số đầu vào                    | `@param username tên người dùng` |
+| @return        | Mô tả giá trị trả về                     | `@return số lượng item`        |
+| @throws        | Mô tả exception có thể xảy ra            | `@throws IllegalArgumentException` |
+| @implSpec      | Mô tả hợp đồng cho lớp con (Java 8+)     | `@implSpec Triển khai mặc định...` |
+| @apiNote       | Ghi chú đặc biệt về API                  | `@apiNote Method này thay thế cho...` |
+
+### Best practices
+**Mô tả ngắn gọn nhưng đầy đủ**:
+
+```java
+/**
+ * Tính căn bậc hai của giá trị đầu vào.
+ * 
+ * @param value giá trị cần tính, phải >= 0
+ * @return căn bậc hai của value
+ * @throws ArithmeticException nếu value âm
+ */
+public static double sqrt(double value) { ... }
+```
+
+
+**Xử lý HTML và code**:
+
+```java
+/**
+ * Giá trị phải thỏa mãn {@code x < 0} 
+ * hoặc {@literal |y| > 1}.
+ */
+public void validate() { ... }
+```
+
+
+**Document cho generic**:
+
+```java
+/**
+ * Container chứa cặp giá trị key-value.
+ *
+ * @param <K> kiểu dữ liệu của key
+ * @param <V> kiểu dữ liệu của value
+ */
+public class Pair<K, V> { ... }
+```
+
+
+### Quy tắc trình bày
+
+| Thành phần      | Quy ước                                  | Ví dụ                          |
+|-----------------|------------------------------------------|--------------------------------|
+| Câu đầu tiên    | Mô tả ngắn gọn, là noun/verb phrase     | "Trả về số lượng phần tử"      |
+| @param          | Bắt đầu bằng danh từ                    | `@param threshold ngưỡng so sánh` |
+| @throws         | Bắt đầu bằng "if"                       | `@throws IOException nếu không đọc được file` |
+| HTML tags       | Sử dụng hợp lý, tránh phức tạp          | `<p>`, `<i>`, `<pre>`          |
+
+### Mẫu code chuẩn
+
+```java
+/**
+ * Đại diện cho một điểm trong không gian 2D.
+ * 
+ * <p>Mỗi điểm có tọa độ x và y không âm.
+ * 
+ * @implSpec Lớp này là immutable, mọi thay đổi tạo instance mới
+ * 
+ * @author Nguyen Van A
+ * @since 1.0
+ */
+public class Point {
+    /**
+     * Tạo điểm mới với tọa độ chỉ định.
+     * 
+     * @param x tọa độ x, phải >= 0
+     * @param y tọa độ y, phải >= 0
+     * @throws IllegalArgumentException nếu tọa độ âm
+     */
+    public Point(int x, int y) { ... }
+    
+    /**
+     * Tính khoảng cách tới điểm khác.
+     * 
+     * @param other điểm đích, không được null
+     * @return khoảng cách Euclid giữa 2 điểm
+     * @throws NullPointerException nếu other null
+     */
+    public double distanceTo(Point other) { ... }
+}
+```
+
+**Giải thích**:
+- Sử dụng đầy đủ các tag cần thiết
+- Mô tả rõ preconditions và postconditions
+- Định dạng code và HTML hợp lý
+
+> Theo thống kê, 75% lỗi sử dụng API xuất phát từ tài liệu không đầy đủ. Luôn kiểm tra HTML output của Javadoc trước khi phát hành.
+{: .prompt-tip}
+
+**Lưu ý cuối**:
+- Chạy kiểm tra Javadoc với option -Xdoclint
+- Sử dụng tool như Checkstyle để tự động hóa kiểm tra
+- Cập nhật tài liệu khi thay đổi code
+- Đảm bảo tính nhất quán trong toàn bộ dự án
