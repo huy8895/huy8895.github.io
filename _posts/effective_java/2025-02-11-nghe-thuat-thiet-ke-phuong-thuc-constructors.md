@@ -607,6 +607,7 @@ static int min(int firstArg, int... remainingArgs) {
 
 ### Best practices
 **Kết hợp overload cho hiệu năng**:
+
 ```java
 public void process() { /* Xử lý 0 tham số */ }
 public void process(int a) { /* Xử lý 1 tham số */ }
@@ -640,6 +641,7 @@ public <T> void merge(T... arrays) {
 | An toàn kiểu      | Kiểm tra compile-time   | Cần validate thủ công    |
 
 ### Mẫu code chuẩn
+
 ```java
 // Pattern từ thư viện EnumSet
 public static <E extends Enum<E>> EnumSet<E> of(E e) {
