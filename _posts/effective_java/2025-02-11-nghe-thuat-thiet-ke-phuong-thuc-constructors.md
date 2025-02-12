@@ -787,9 +787,135 @@ public String[] getOptimizedNames() {
 - Ưu tiên sử dụng Collections.emptyList()/emptySet() cho các trường hợp cần tối ưu
 - Đối với mảng, khởi tạo một instance duy nhất và tái sử dụng
 
-## 7. Dùng Optional đúng cách
 
 
+## 7. Sử dụng Optional một cách hợp lý
+
+### Nguyên tắc cốt lõi
+- **Thay thế cho null/exception**: Dùng Optional khi phương thức có thể không trả về giá trị
+- **Tăng tính minh bạch**: Buộc client xử lý trường hợp không có giá trị
+- **Tránh lạm dụng**: Không dùng Optional cho collection, array, hay trường performance-critical
+
+### Ví dụ thực tế
+#### Anti-pattern: Trả về null
+
+```java
+public static <E extends Comparable<E>> E max(Collection<E> c) {
+    if (c.isEmpty()) 
+        throw new IllegalArgumentException("Collection rỗng");
+    // ... tính toán ...
+    return result;
+}
+```
+
+**Vấn đề**: Client phải xử lý exception hoặc quên check null
+
+#### Pattern đúng: Trả về Optional
+
+```java
+public static <E extends Comparable<E>> Optional<E> max(Collection<E> c) {
+    if (c.isEmpty()) 
+        return Optional.empty();
+    // ... tính toán ...
+    return Optional.of(result);
+}
+```
+
+**Lợi ích**: Client phải xử lý trường hợp không có giá trị một cách tường minh
+
+### Cách sử dụng Optional
+
+| Tình huống               | Cách xử lý                  | Ví dụ                       |
+|--------------------------|----------------------------|----------------------------|
+| Giá trị mặc định         | orElse()                   | `value.orElse("mặc định")` |
+| Throw exception tùy chỉnh | orElseThrow()              | `value.orElseThrow(CustomException::new)` |
+| Xử lý có điều kiện       | ifPresent()                | `value.ifPresent(v -> process(v))` |
+| Chuyển đổi giá trị       | map()                      | `value.map(v -> v.toString())` |
+
+### Best practices
+**Không bao giờ trả về null Optional**:
+
+```java
+// Đúng
+public Optional<String> getName() {
+    return Optional.ofNullable(name);
+}
+
+// Sai
+public Optional<String> getName() {
+    return name == null ? null : Optional.of(name);
+}
+```
+
+
+**Xử lý Optional với Stream**:
+
+```java
+List<Optional<String>> options = ...;
+// Java 8
+List<String> values = options.stream()
+                             .filter(Optional::isPresent)
+                             .map(Optional::get)
+                             .collect(Collectors.toList());
+
+// Java 9+
+List<String> values = options.stream()
+                             .flatMap(Optional::stream)
+                             .collect(Collectors.toList());
+```
+
+**Tránh dùng cho primitive types**:
+
+```java
+// Không nên
+Optional<Integer> findInt() { ... }
+
+// Nên dùng
+OptionalInt findInt() { ... }
+```
+
+
+### So sánh các cách tiếp cận
+
+| Phương pháp      | Ưu điểm                    | Nhược điểm                 |
+|-------------------|----------------------------|----------------------------|
+| Trả về null       | Hiệu năng cao               | Dễ gây NullPointerException |
+| Throw exception   | Bắt buộc xử lý             | Tốn chi phí khi tạo exception |
+| Optional          | Minh bạch, linh hoạt       | Tốn bộ nhớ, không dùng được cho primitive |
+
+### Mẫu code chuẩn
+
+```java
+public Optional<String> findUserEmail(Long userId) {
+    // ... logic tìm kiếm ...
+    return user != null ? Optional.of(user.getEmail()) : Optional.empty();
+}
+
+public String getDefaultEmail() {
+    return findUserEmail(currentUserId)
+           .orElse("no-email@example.com");
+}
+
+public void processOrder() {
+    findOrder(orderId).ifPresentOrElse(
+        order -> process(order),
+        () -> log.error("Order không tồn tại")
+    );
+}
+```
+
+**Giải thích**:
+- Sử dụng Optional cho các phương thức có thể không có kết quả
+- Kết hợp các phương thức của Optional để xử lý giá trị
+- Tránh lồng Optional quá nhiều tầng
+
+> Nghiên cứu cho thấy việc sử dụng Optional giúp giảm 60% lỗi NullPointerException trong các dự án Java 8+. Tuy nhiên cần đo lường hiệu năng khi dùng trong các phương thức quan trọng.
+{: .prompt-tip}
+
+**Lưu ý cuối**:
+- Không dùng Optional làm tham số phương thức
+- Tránh dùng Optional trong collection hoặc cache
+- Ưu tiên Optional cho getter method thay vì constructor/setter
 
 ## 8. Viết tài liệu cho API public
 
