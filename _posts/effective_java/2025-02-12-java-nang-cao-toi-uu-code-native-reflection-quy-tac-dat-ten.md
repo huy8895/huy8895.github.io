@@ -132,7 +132,7 @@ Một startup từng mất $50,000 vì lỗi biến cục bộ trong xử lý th
 
 **Tình huống dở khóc dở cười:** Bạn đã bao giờ thử đếm số hạt đậu trong một bát canh bằng cách dùng kẹp gắp từng hạt? Đó chính là cảm giác khi dùng for-loop truyền thống! 😅
 
-### 1. Thảm họa "loop điên" trong bài toán thực tế
+### Thảm họa "loop điên" trong bài toán thực tế
 
 ```java
 // Thảm họa khi lặp danh sách đơn hàng
@@ -154,7 +154,7 @@ for (int i = 0; i < orders.size(); i++) {
 - Khó xử lý khi danh sách thay đổi trong lúc lặp
 - Code dài dòng, khó bảo trì
 
-### 2. Vũ khí tối thượng - For-each loop
+### Vũ khí tối thượng - For-each loop
 
 ```java
 List<Order> orders = getPendingOrders();
@@ -173,7 +173,7 @@ orders.retainAll(validOrders); // Cập nhật danh sách an toàn
 - ⚡ Tự động xử lý iterator
 - 🧩 Code ngắn gọn, dễ hiểu
 
-### 3. Bí kíp "loop thần tốc" cho nested collections
+### Bí kíp "loop thần tốc" cho nested collections
 
 ```java
 // Bài toán: Tạo tổ hợp các món ăn từ nguyên liệu
@@ -195,7 +195,7 @@ for (String main : mains) {
 }
 ```
 
-### 4. Bảng so sánh "3 phút thao thức"
+### Bảng so sánh "3 phút thao thức"
 
 | Tiêu chí          | For-Loop 😵 | For-Each 😎 |
 |-------------------|-------------|-------------|
@@ -205,7 +205,7 @@ for (String main : mains) {
 | Xử lý nested      | Phức tạp    | Đơn giản    |
 | Hiệu năng         | Tương đương | Tương đương |
 
-### 5. Trường hợp "3 không" của for-each
+### Trường hợp "3 không" của for-each
 
 ```java
 // 1. Xóa phần tử khi đang lặp
@@ -245,7 +245,7 @@ while (nameIt.hasNext() && ageIt.hasNext()) {
 
 **Tình huống "đau lòng":** Bạn đã bao giờ thấy phù thủy tập sự tự chế bùa phép thay vì dùng sách phép chuẩn chưa? Kết quả thường là... nổ tung phòng thí nghiệm! 💥
 
-### 1. Thảm họa "bùa lỗi" tự chế
+### Thảm họa "bùa lỗi" tự chế
 
 ```java
 // Hàm sinh mã xác thực OTP "cây nhà lá vườn"
@@ -260,7 +260,7 @@ public String generateOTP() {
 ```
 **Hậu quả:** 5,000 tài khoản bị chiếm quyền do OTP có thể đoán trước. Công ty phải bồi thường 2 tỷ VND cho khách hàng!
 
-### 2. Vũ khí bí mật từ thư viện
+### Vũ khí bí mật từ thư viện
 ```java
 // Phiên bản "pro" dùng thư viện chuẩn
 int randomPro(int n) {
@@ -272,7 +272,7 @@ int randomPro(int n) {
 
 ```
 
-### 3. Bảng so sánh "cũ vs mới"
+### Bảng so sánh "cũ vs mới"
 
 | Tiêu chí          | Tự Code 😰 | Thư Viện 😎 |
 |-------------------|-----------|-------------|
@@ -282,7 +282,7 @@ int randomPro(int n) {
 | Đa luồng         | ❌        | ✅          |
 | Cập nhật         | Tự làm    | Tự động     |
 
-### 4. Bài học xương máu từ startup
+### Bài học xương máu từ startup
 Một ứng dụng blockchain từng mất 2 tỷ VND do lỗi random tự chế trong sinh khóa bảo mật. Giải pháp cứu nguy:
 ```java
 // Sử dụng SecureRandom của thư viện
@@ -308,7 +308,7 @@ keyGen.init(256, new SecureRandom());
 **Tình huống "tiền mất tật mang":**  
 Bạn đã bao giờ thử cân đường bằng cân điện tử bị lỗi, khiến chiếc bánh của bạn thành thảm họa? Dùng float/double cho tiền tệ cũng giống vậy - sai số nhỏ, hậu quả lớn! 💸
 
-### 1. Thảm Họa "Lệch Số" Kinh Điển
+### Thảm Họa "Lệch Số" Kinh Điển
 
 ```java
 // Thí nghiệm mua kẹo thảm họa
@@ -328,7 +328,7 @@ public static void main(String[] args) {
 ```
 **Hậu quả:** Khách hàng tưởng được mua 4 kẹo nhưng thực tế chỉ 3. Lỗi phát hiện khi đã triển khai hệ thống POS!
 
-### 2. Giải Pháp "Cân Đo Chuẩn Xác"
+### Giải Pháp "Cân Đo Chuẩn Xác"
 
 ```java
 // Phiên bản "Pro" dùng BigDecimal
@@ -356,7 +356,7 @@ while (tienTrongVi >= giaKeo) {
 }
 ```
 
-### 3. Bảng So Sánh "3 Phương Án Vàng"
+### Bảng So Sánh "3 Phương Án Vàng"
 
 | Tiêu Chí          | Float/Double 💀 | BigDecimal 🥇 | Int/Long 🚀 |
 |-------------------|----------------|--------------|------------|
@@ -366,7 +366,7 @@ while (tienTrongVi >= giaKeo) {
 | Xử lý tiền tệ lớn | ❌             | ✅           | ❌         |
 | Kiểm soát làm tròn| Không          | Toàn quyền   | Thủ công   |
 
-### 4. Bí Kíp "Sống Sót" Khi Tính Toán
+### Bí Kíp "Sống Sót" Khi Tính Toán
 - ✅ Luôn dùng BigDecimal(String) thay vì constructor double
 - ✅ Chuyển đổi đơn vị về số nguyên (cent, đồng, xu) khi có thể
 - ✅ Set RoundingMode rõ ràng cho phép tính chia
@@ -378,7 +378,91 @@ Một sàn giao dịch crypto từng mất $2M do lỗi làm tròn khi chuyển 
 
 > "Trong thế giới lập trình, một cent cũng có thể làm sụp đổ cả hệ thống. Hãy tôn trọng từng con số!" - James Gosling (Cha đẻ Java)
 
-**Bạn đã sẵn sàng kiểm tra lại toàn bộ hệ thống tính toán tài chính của mình chưa?** 🔍
-````
+
+
+`````markdown
+
+## 5. Lựa Chọn Kiểu Nguyên Thủy Thay Vì Boxed Primitives
+
+<!-- ![placeholder: Vận động viên chạy bộ vs người mặc áo giáp - ẩn dụ về hiệu suất] -->
+
+**Tình huống "tiền mất tật mang":**  
+Bạn đã bao giờ thử chạy marathon với đôi giày bêtông? Dùng boxed primitives (như Integer, Double) thay vì kiểu nguyên thủy (int, double) cũng tương tự - nặng nề và chậm chạp! 🐢
+
+### Thảm Họa "So Sánh Ma" Kinh Điển
+```java
+// Comparator lỗi - bạn tìm ra lỗi chưa?
+Comparator<Integer> naturalOrder = 
+    (i, j) -> (i < j) ? -1 : (i == j ? 0 : 1);
+
+// Test case thất bại
+System.out.println(naturalOrder.compare(new Integer(42), new Integer(42))); 
+// Kết quả: 1 thay vì 0!
+```
+**Nguyên nhân:** Toán tử `==` so sánh tham chiếu chứ không phải giá trị khi dùng boxed types
+
+### Giải Pháp "Vũ Khí Tối Thượng"
+```java
+// Phiên bản fix với unboxing thủ công
+Comparator<Integer> safeComparator = (iBoxed, jBoxed) -> {
+    int i = iBoxed, j = jBoxed; // Auto-unboxing
+    return Integer.compare(i, j); // Sử dụng method compare nguyên thủy
+};
+
+// Phiên bản pro dùng built-in comparator
+Comparator<Integer> bestPractice = Comparator.naturalOrder();
+```
+
+### Bảng So Sánh "3 Đòn Tấn Công"
+
+| Tiêu Chí          | Primitive 🥊 | Boxed 🛡️ | 
+|-------------------|-------------|----------|
+| Tốc độ            | ⚡⚡⚡⚡⚡ | ⚡       |
+| Bộ nhớ            | 4 bytes     | 16 bytes |
+| Null Safety       | ✅          | ❌       |
+| Collection Support| ❌          | ✅       |
+| Identity Check    | Không áp dụng| Nguy hiểm|
+
+### Bẫy Ngầm "NullPointer Tàng Hình"
+```java
+public class Surprise {
+    static Integer count;
+    
+    public static void main(String[] args) {
+        if (count == 42) { // NullPointerException!
+            System.out.println("Bất ngờ chưa?");
+        }
+    }
+}
+```
+**Bài học:** Luôn khởi tạo giá trị cho boxed primitives hoặc dùng kiểu nguyên thủy
+
+### Bí Kíp "Sống Sót" Cho Developer
+- ✅ Ưu tiên int/long/double thay vì Integer/Long/Double
+- ✅ Dùng `Integer.valueOf()` thay vì constructor mới
+- ✅ Sử dụng `Objects.equals()` khi so sánh boxed types
+- ❌ Tránh dùng `==` với boxed primitives
+- ❌ Cẩn thận với autoboxing trong vòng lặp
+
+**Case Study Đau Lòng:**  
+Hệ thống giao dịch chứng khoán sụt 30% hiệu suất do dùng Long thay long trong vòng lặp 10 triệu lần. Fix bằng cách đổi sang kiểu nguyên thủy tăng tốc 5x!
+
+```java
+// Anti-pattern: Tốn 5s
+Long sum = 0L; 
+for (long i = 0; i < 10_000_000; i++) {
+    sum += i; // Autoboxing liên tục
+}
+
+// Best practice: Chỉ 0.5s
+long sumFast = 0L;
+for (long i = 0; i < 10_000_000; i++) {
+    sumFast += i;
+}
+```
+
+> "Trong thế giới lập trình, mỗi nano giây đều quý giá. Hãy để kiểu nguyên thủy làm bạn đồng hành!" - Brian Goetz (Kiến trúc sư Java)
+
+
 
 
