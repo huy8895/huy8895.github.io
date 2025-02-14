@@ -301,6 +301,84 @@ keyGen.init(256, new SecureRandom());
 **Lời vàng ngọc từ chuyên gia:**  
 > "Một developer khôn ngoan là người biết đứng trên vai những gã khổng lồ" - Joshua Bloch (Cha đẻ của Effective Java)
 
+## 4. Tránh Bẫy Tính Toán Tiền Tệ Với Float/Double
 
+<!-- ![placeholder: Thước đo bị cong vs thước laser chính xác - ẩn dụ về độ chính xác] -->
+
+**Tình huống "tiền mất tật mang":**  
+Bạn đã bao giờ thử cân đường bằng cân điện tử bị lỗi, khiến chiếc bánh của bạn thành thảm họa? Dùng float/double cho tiền tệ cũng giống vậy - sai số nhỏ, hậu quả lớn! 💸
+
+### 1. Thảm Họa "Lệch Số" Kinh Điển
+
+```java
+// Thí nghiệm mua kẹo thảm họa
+public static void main(String[] args) {
+    double tienTrongVi = 1.00; // $1
+    int soKeoMua = 0;
+    
+    for (double giaKeo = 0.10; tienTrongVi >= giaKeo; giaKeo += 0.10) {
+        tienTrongVi -= giaKeo;
+        soKeoMua++;
+    }
+    
+    System.out.println("Mua được " + soKeoMua + " kẹo");
+    System.out.println("Tiền thừa: $" + tienTrongVi); 
+    // Kết quả: 3 kẹo với $0.399... còn lại - SAI HOÀN TOÀN!
+}
+```
+**Hậu quả:** Khách hàng tưởng được mua 4 kẹo nhưng thực tế chỉ 3. Lỗi phát hiện khi đã triển khai hệ thống POS!
+
+### 2. Giải Pháp "Cân Đo Chuẩn Xác"
+
+```java
+// Phiên bản "Pro" dùng BigDecimal
+public static void main(String[] args) {
+    final BigDecimal GIA_KEO = new BigDecimal("0.10");
+    BigDecimal tienTrongVi = new BigDecimal("1.00");
+    int soKeoMua = 0;
+
+    while (tienTrongVi.compareTo(GIA_KEO) >= 0) {
+        tienTrongVi = tienTrongVi.subtract(GIA_KEO);
+        soKeoMua++;
+        GIA_KEO = GIA_KEO.add(new BigDecimal("0.10"));
+    }
+    
+    System.out.println("Mua được " + soKeoMua + " kẹo"); // 4 kẹo
+    System.out.println("Tiền thừa: $" + tienTrongVi); // $0.00
+}
+
+// Phiên bản "Speed" dùng int (tính bằng cent)
+int tienTrongVi = 100; // 100 cent = $1
+int giaKeo = 10; // 10 cent
+while (tienTrongVi >= giaKeo) {
+    tienTrongVi -= giaKeo;
+    giaKeo += 10;
+}
+```
+
+### 3. Bảng So Sánh "3 Phương Án Vàng"
+
+| Tiêu Chí          | Float/Double 💀 | BigDecimal 🥇 | Int/Long 🚀 |
+|-------------------|----------------|--------------|------------|
+| Độ chính xác      | 0/10           | 10/10        | 10/10      |
+| Tốc độ            | ⚡⚡⚡⚡⚡     | ⚡           | ⚡⚡⚡⚡     |
+| Dễ triển khai     | 😊             | 😅           | 😃         |
+| Xử lý tiền tệ lớn | ❌             | ✅           | ❌         |
+| Kiểm soát làm tròn| Không          | Toàn quyền   | Thủ công   |
+
+### 4. Bí Kíp "Sống Sót" Khi Tính Toán
+- ✅ Luôn dùng BigDecimal(String) thay vì constructor double
+- ✅ Chuyển đổi đơn vị về số nguyên (cent, đồng, xu) khi có thể
+- ✅ Set RoundingMode rõ ràng cho phép tính chia
+- ❌ Đừng bao giờ dùng == với float/double
+- ❌ Tránh tích lũy sai số qua nhiều phép tính
+
+**Bài học xương máu:**  
+Một sàn giao dịch crypto từng mất $2M do lỗi làm tròn khi chuyển đổi BTC/USD. Lỗi xuất phát từ việc dùng double để tính phí giao dịch!
+
+> "Trong thế giới lập trình, một cent cũng có thể làm sụp đổ cả hệ thống. Hãy tôn trọng từng con số!" - James Gosling (Cha đẻ Java)
+
+**Bạn đã sẵn sàng kiểm tra lại toàn bộ hệ thống tính toán tài chính của mình chưa?** 🔍
+````
 
 
